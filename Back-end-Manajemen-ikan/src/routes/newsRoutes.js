@@ -3,6 +3,7 @@ import {
   createNews,
   getAllNews,
   getNewsById,
+  getPublishedNews,
   updateNews,
   deleteNews,
 } from "../controllers/newsController.js";
@@ -12,7 +13,9 @@ const router = express.Router();
 
 // Siapa saja boleh melihat daftar/detail berita
 router.get("/news", getAllNews);
+router.get("/news/published", getPublishedNews);
 router.get("/news/:id", getNewsById);
+
 
 // Hanya admin yang boleh membuat, mengubah, dan menghapus berita
 router.post("/news", authMiddleware, adminOnly, createNews);

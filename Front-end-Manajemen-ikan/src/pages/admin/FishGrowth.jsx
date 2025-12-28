@@ -152,7 +152,7 @@ const AdminFishGrowth = () => {
 
         <button
           onClick={openAddModal}
-          className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-3 rounded-lg"
+          className="bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded-lg"
         >
           + Add Fish Growth
         </button>

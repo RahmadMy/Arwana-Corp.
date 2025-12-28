@@ -7,6 +7,14 @@ const News = db.define("news", {
   slug: DataTypes.STRING,
   image: DataTypes.STRING,
   description: DataTypes.TEXT,
+  status: {
+    type: DataTypes.ENUM("draft", "publish"),
+    defaultValue: "draft",
+  },
+  tanggal_publikasi: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
   userId: {
     type: DataTypes.INTEGER,
     references: {

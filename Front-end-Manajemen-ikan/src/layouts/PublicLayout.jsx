@@ -113,10 +113,10 @@ const PublicLayout = ({ children }) => {
 
               <p className="text-sm leading-relaxed">
                 <span className="font-medium text-white">
-                  PT Budidaya Arowana Putra Perkasa
+                  PT Arwana Citra ikan hias Indonesia
                 </span><br />
-                Jl. Sungai Arowana No. 21,<br />
-                Pekanbaru, Riau, Indonesia
+                Jl. Randu 5 No. 21,<br />
+                Jakarta, Bekasi, Indonesia
               </p>
 
               <div className="mt-6 text-sm space-y-2">
@@ -133,7 +133,7 @@ const PublicLayout = ({ children }) => {
             <div className="border border-white/15 rounded-2xl overflow-hidden bg-white/5">
               <iframe
                 title="Arowana Corp Location"
-                src="https://www.google.com/maps?q=Pekanbaru%20Riau&output=embed"
+                src="https://www.google.com/maps?q=PT%20Arwana%20Citra%20Ikan%20Hias%20Indonesia&output=embed"
                 className="w-full h-full min-h-[260px]"
                 loading="lazy"
               />

@@ -9,13 +9,20 @@ const News = () => {
     const fetchNews = async () => {
       try {
         const response = await newsService.getAll()
-        setNews(response.data || [])
+
+        // 🔒 HANYA TAMPILKAN BERITA PUBLISH
+        const publishedNews = (response.data || []).filter(
+          (item) => item.status === 'publish'
+        )
+
+        setNews(publishedNews)
       } catch (error) {
         console.error('Error fetching news:', error)
       } finally {
         setLoading(false)
       }
     }
+
     fetchNews()
   }, [])
 
@@ -29,26 +36,30 @@ const News = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
-      <h1 className="text-4xl font-bold text-white mb-8">Berita</h1>
+      <h1 className="text-4xl font-bold text-white mb-8">
+        Berita
+      </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {news.length > 0 ? (
           news.map((item) => (
             <div
-                key={item.id}
-                className="relative h-80 rounded-lg overflow-hidden bg-center bg-cover"
-                style={{
-                  backgroundImage: item.image
-                    ? `url(${item.image.trim()})`
-                    : 'none'
-                }}
-              >
+              key={item.id}
+              className="relative h-80 rounded-xl overflow-hidden bg-black border border-gray-700"
+              style={{
+                backgroundImage: item.image
+                  ? `url(${item.image.trim()})`
+                  : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
               {/* Overlay */}
               <div className="absolute inset-0 bg-black/60"></div>
 
-              {/* Konten */}
+              {/* Content */}
               <div className="relative z-10 p-6 flex flex-col justify-end h-full">
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-white mb-2 leading-snug">
                   {item.title}
                 </h3>
 
@@ -57,13 +68,26 @@ const News = () => {
                 </p>
 
                 <p className="text-gray-400 text-xs">
-                  {new Date(item.createdAt).toLocaleDateString()}
+                  {item.tanggal_publikasi ? (
+                    new Date(item.tanggal_publikasi).toLocaleDateString(
+                      'id-ID',
+                      {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      }
+                    )
+                  ) : (
+                    <span className="italic">
+                      Belum dipublikasikan
+                    </span>
+                  )}
                 </p>
               </div>
             </div>
           ))
         ) : (
-          <div className="col-span-full text-center text-gray-400">
+          <div className="col-span-full text-center text-gray-400 py-12">
             Belum ada berita tersedia
           </div>
         )}

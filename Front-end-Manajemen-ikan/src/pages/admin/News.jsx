@@ -14,6 +14,8 @@ const AdminNews = () => {
     title: '',
     description: '',
     image: '',
+    tanggal_publikasi: '',
+    status: 'draft', // default
   })
 
   /* ================= ROLE ================= */
@@ -38,27 +40,39 @@ const AdminNews = () => {
   /* ================= MODAL ================= */
   const openAddModal = () => {
     if (!isAdmin) return
+  
     setIsEdit(false)
     setSelectedId(null)
     setFormData({
       title: '',
       description: '',
       image: '',
+      tanggal_publikasi: '',
+      status: 'draft',
     })
+  
     setShowModal(true)
   }
 
   const openEditModal = (item) => {
     if (!isAdmin) return
+  
     setIsEdit(true)
     setSelectedId(item.id)
+  
     setFormData({
       title: item.title || '',
       description: item.description || '',
       image: item.image || '',
+      tanggal_publikasi: item.tanggal_publikasi
+        ? item.tanggal_publikasi.split('T')[0]
+        : '',
+      status: item.status || 'draft',
     })
+  
     setShowModal(true)
   }
+  
 
   /* ================= FORM ================= */
   const handleChange = (e) => {
@@ -142,14 +156,47 @@ const AdminNews = () => {
               </div>
 
               {/* CONTENT */}
-              <div className="mb-4">
-                <h3 className="text-white font-semibold text-xl mb-2">
+              <div className="mb-5">
+                <h3 className="text-white font-semibold text-lg leading-snug mb-1">
                   {item.title}
                 </h3>
-                <p className="text-gray-400 text-sm">
+
+                <div className="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                  <span
+                    className={`inline-flex items-center px-2 py-0.5 rounded-md font-medium
+                      ${
+                        item.status === "publish"
+                          ? "bg-green-500/10 text-green-400"
+                          : "bg-yellow-500/10 text-yellow-400"
+                      }
+                    `}
+                  >
+                    {item.status === "publish" ? "Published" : "Draft"}
+                  </span>
+
+                  <span className="text-gray-500">•</span>
+
+                  {item.tanggal_publikasi ? (
+                    <time dateTime={item.tanggal_publikasi}>
+                      {new Date(item.tanggal_publikasi).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </time>
+                  ) : (
+                    <span className="italic text-gray-500">
+                      Belum dipublikasikan
+                    </span>
+                  )}
+
+                </div>
+
+                <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
                   {item.description}
                 </p>
               </div>
+
 
               {/* ACTION → ADMIN ONLY */}
               {isAdmin && (
@@ -229,6 +276,24 @@ const AdminNews = () => {
                 placeholder="Image URL"
                 className="w-full bg-black border border-gray-600 text-white px-4 py-2 rounded"
               />
+              
+              <input
+                type="date"
+                name="tanggal_publikasi"
+                value={formData.tanggal_publikasi}
+                onChange={handleChange}
+                className="w-full bg-black border border-gray-600 text-white px-4 py-2 rounded"
+              />
+
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="w-full bg-black border border-gray-600 text-white px-4 py-2 rounded"
+              >
+                <option value="draft">Draft</option>
+                <option value="publish">Publish</option>
+              </select>
 
               {formData.image && (
                 <img

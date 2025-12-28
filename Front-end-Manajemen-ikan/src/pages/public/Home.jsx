@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { newsService } from "../../services/newsService"
+import { fishSpeciesService } from "../../services/fishSpeciesService"
 
 import arowanaBg from "../../assets/images/arowana-bg.jpg"
 import ikan from "../../assets/images/ikan.jpg"
-import company from "../../assets/images/company-icon.png"
 import gedung from "../../assets/images/gedung.jpg"
 import tambak from "../../assets/images/tambak.jpg"
 import aqua from "../../assets/images/aqua.jpg"
@@ -95,12 +95,14 @@ const features = [
 export default function Home() {
   const [news, setNews] = useState([])
   const [loadingNews, setLoadingNews] = useState(true)
+  const [products, setProducts] = useState([])
+  const [loadingProducts, setLoadingProducts] = useState(true)
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await newsService.getAll()
-        setNews(res.data || [])
+        const response = await newsService.getPublished()
+        setNews(response.data || [])
       } catch (err) {
         console.error(err)
       } finally {
@@ -109,7 +111,22 @@ export default function Home() {
     }
     fetchNews()
   }, [])
-
+  
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fishSpeciesService.getAll()
+        setProducts(res.data || [])
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoadingProducts(false)
+      }
+    }
+  
+    fetchProducts()
+  }, [])
+    
   return (
     <div className="bg-black text-white">
 
@@ -237,7 +254,7 @@ export default function Home() {
                       {news[0].description}
                     </p>
                     <span className="text-sm text-gray-400 mt-3">
-                      {news[0].date}
+                      {new Date(news[0].createdAt).toLocaleDateString("id-ID")}
                     </span>
                   </div>
                 </div>
@@ -261,7 +278,7 @@ export default function Home() {
                         {item.description}
                       </p>
                       <span className="text-xs text-gray-400 mt-2">
-                        {new Date(item.createdAt).toLocaleDateString("id-ID")}
+                        {new Date(item.tanggal_publikasi).toLocaleDateString("id-ID")}
                       </span>
                     </div>
                   </div>
@@ -372,136 +389,87 @@ export default function Home() {
       </div>
     </section>
     <section
-        id="product"
-        className="relative bg-gradient-to-b from-black via-black to-neutral-900 py-24"
-      >
-        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+      id="product"
+      className="relative py-24"
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
-          {/* HEADER */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white">
-              Our <span className="text-orange-500">Products</span>
-            </h2>
-            <p className="mt-4 text-gray-400 max-w-2xl mx-auto">
-              We offer premium Arowana products cultivated through sustainable
-              aquaculture and managed with our Smart Management System to ensure
-              superior quality, health, and performance.
-            </p>
-          </div>
-
-          {/* PRODUCT GRID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            {/* PRODUCT CARD 1 */}
-            <div className="group border border-white/10 rounded-2xl overflow-hidden bg-white/5 hover:bg-white/10 transition">
-              <div className="h-56 overflow-hidden">
-                <img
-                  src={ikan}
-                  alt="Premium Red Arowana"
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                />
-              </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  Premium Red Arowana
-                </h3>
-
-                <p className="text-sm text-gray-400 leading-relaxed mb-4">
-                  High-grade Red Arowana bred under controlled environments,
-                  ensuring vibrant coloration, strong genetics, and optimal growth.
-                </p>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-orange-400 font-semibold text-sm">
-                    Grade A • Export Quality
-                  </span>
-
-                  <button className="text-sm text-white border border-white/20 px-4 py-2 rounded-lg hover:border-orange-400 hover:text-orange-400 transition">
-                    View Details →
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* PRODUCT CARD 2 */}
-            <div className="group border border-white/10 rounded-2xl overflow-hidden bg-white/5 hover:bg-white/10 transition">
-              <div className="h-56 overflow-hidden">
-                <img
-                  src={ikan}
-                  alt="Golden Crossback Arowana"
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                />
-              </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  Golden Crossback Arowana
-                </h3>
-
-                <p className="text-sm text-gray-400 leading-relaxed mb-4">
-                  Premium Golden Crossback with exceptional scale shine,
-                  monitored feeding schedules, and balanced nutrition systems.
-                </p>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-orange-400 font-semibold text-sm">
-                    Grade A • Smart Cultivation
-                  </span>
-
-                  <button className="text-sm text-white border border-white/20 px-4 py-2 rounded-lg hover:border-orange-400 hover:text-orange-400 transition">
-                    View Details →
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* PRODUCT CARD 3 */}
-            <div className="group border border-white/10 rounded-2xl overflow-hidden bg-white/5 hover:bg-white/10 transition">
-              <div className="h-56 overflow-hidden">
-                <img
-                  src={ikan}
-                  alt="Super Highback Golden Arowana"
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                />
-              </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  Super Highback Golden
-                </h3>
-
-                <p className="text-sm text-gray-400 leading-relaxed mb-4">
-                  Carefully selected Highback Golden Arowana raised with advanced
-                  water quality monitoring and health tracking systems.
-                </p>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-orange-400 font-semibold text-sm">
-                    Premium Selection
-                  </span>
-
-                  <button className="text-sm text-white border border-white/20 px-4 py-2 rounded-lg hover:border-orange-400 hover:text-orange-400 transition">
-                    View Details →
-                  </button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* CTA */}
-          <div className="mt-20 text-center">
-            <a
-              href="/product"
-              className="inline-block border border-orange-400 text-orange-400 px-10 py-4 rounded-xl hover:bg-orange-400 hover:text-black transition"
-            >
-              Explore All Products →
-            </a>
-          </div>
-
+        {/* HEADER */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-white">
+            Our Products
+          </h2>
+          <p className="mt-4 text-orange-400 max-w-2xl mx-auto">
+            We offer premium Arowana products cultivated through sustainable
+            aquaculture and managed with our Smart Management System to ensure
+            superior quality, health, and performance.
+          </p>
         </div>
-      </section>
+
+        {/* PRODUCT GRID */}
+        {loadingProducts ? (
+          <p className="text-center text-gray-400">
+            Loading products...
+          </p>
+        ) : products.length === 0 ? (
+          <p className="text-center text-gray-500">
+            No products available
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((item) => (
+              <div
+                key={item.id}
+                className="group border border-white/10 rounded-2xl overflow-hidden bg-white/5 hover:bg-white/10 transition"
+              >
+                {/* IMAGE */}
+                <div className="h-56 overflow-hidden">
+                  <img
+                    src={item.image || ikan}
+                    alt={item.namaVarietas}
+                    className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                  />
+                </div>
+
+                {/* CONTENT */}
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    {item.namaVarietas}
+                  </h3>
+
+                  <p className="text-sm text-gray-400 leading-relaxed mb-4 line-clamp-3">
+                    {item.deskripsi ||
+                      "Premium Arowana bred under controlled environments with smart aquaculture systems."}
+                  </p>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-orange-400 font-semibold text-sm">
+                      {item.asal || "Premium Selection"}
+                    </span>
+
+                    <button className="text-sm text-white border border-white/20 px-4 py-2 rounded-lg hover:border-orange-400 hover:text-orange-400 transition">
+                      View Details →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* CTA */}
+        <div className="mt-20 text-center">
+          <a
+            href="/product"
+            className="inline-block border border-orange-400 text-orange-400 px-10 py-4 rounded-xl hover:bg-orange-400 hover:text-black transition"
+          >
+            Explore All Products →
+          </a>
+        </div>
+
+      </div>
+    </section>
+
           
     <section id="archive" className="py-24">
       <div className="max-w-7xl mx-auto px-10">
