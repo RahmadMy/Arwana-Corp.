@@ -32,7 +32,7 @@ const WorkerDashboard = () => {
   const [stats, setStats] = useState({
     totalAquariums: 0,
     totalSpecies: 0,
-    totalFish: 0,
+    totalGrowthRecords: 0,
     healthyFish: 0
   })
   const [growthChart, setGrowthChart] = useState([])
@@ -49,29 +49,25 @@ const WorkerDashboard = () => {
           fishHealthService.getAll().catch(() => ({ data: [] }))
         ])
 
-        const totalFish =
-          growths.data?.reduce((sum, g) => sum + (g.jumlah || 0), 0) || 0
+        const totalGrowthRecords = growths.data?.length || 0
+        const healthyFish = healths.data?.filter(h => h.kondisi === 'Sehat').length || 0
 
-        const healthyFish =
-          healths.data?.filter(h => h.kondisi === 'Sehat').length || 0
+        // Growth chart
+        const growthData = growths.data?.map((g, i) => ({
+          name: `Record ${i + 1}`,
+          amount: g.jumlah || 0
+        })) || []
 
-        // Grafik pertumbuhan
-        const growthData =
-          growths.data?.map((g, i) => ({
-            name: `Data ${i + 1}`,
-            jumlah: g.jumlah || 0
-          })) || []
-
-        // Grafik kesehatan
+        // Health chart
         const healthData = [
-          { name: 'Sehat', value: healthyFish },
-          { name: 'Tidak Sehat', value: (healths.data?.length || 0) - healthyFish }
+          { name: 'Healthy', value: healthyFish },
+          { name: 'Unhealthy', value: (healths.data?.length || 0) - healthyFish }
         ]
 
         setStats({
           totalAquariums: aquariums.data?.length || 0,
           totalSpecies: species.data?.length || 0,
-          totalFish,
+          totalGrowthRecords,
           healthyFish
         })
         setGrowthChart(growthData)
@@ -87,7 +83,7 @@ const WorkerDashboard = () => {
   }, [])
 
   if (loading) {
-    return <div className="text-center py-12 text-white">Memuat data...</div>
+    return <div className="text-center py-12 text-white">Loading data...</div>
   }
 
   return (
@@ -99,22 +95,22 @@ const WorkerDashboard = () => {
       {/* ===== STAT CARDS ===== */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <StatCard
-          title="Total Akuarium"
+          title="Total Aquariums"
           value={stats.totalAquariums}
           icon={<FaWater />}
         />
         <StatCard
-          title="Varietas Ikan"
+          title="Fish Species"
           value={stats.totalSpecies}
           icon={<FaFish />}
         />
         <StatCard
-          title="Total Ikan"
-          value={stats.totalFish}
+          title="Total Growth Records"
+          value={stats.totalGrowthRecords}
           icon={<FaChartLine />}
         />
         <StatCard
-          title="Ikan Sehat"
+          title="Healthy Fish"
           value={stats.healthyFish}
           icon={<FaHeartbeat />}
         />
@@ -125,7 +121,7 @@ const WorkerDashboard = () => {
         {/* Growth Chart */}
         <div className="bg-black border-2 border-white rounded-lg p-6">
           <h2 className="text-white font-semibold mb-4">
-            Grafik Pertumbuhan Ikan
+            Fish Growth Chart
           </h2>
 
           <ResponsiveContainer width="100%" height={300}>
@@ -136,7 +132,7 @@ const WorkerDashboard = () => {
               <Tooltip />
               <Line
                 type="monotone"
-                dataKey="jumlah"
+                dataKey="amount"
                 stroke="#FACC15"
                 strokeWidth={3}
               />
@@ -147,7 +143,7 @@ const WorkerDashboard = () => {
         {/* Health Chart */}
         <div className="bg-black border-2 border-white rounded-lg p-6">
           <h2 className="text-white font-semibold mb-4">
-            Kondisi Kesehatan Ikan
+            Fish Health Status
           </h2>
 
           <ResponsiveContainer width="100%" height={300}>
@@ -174,12 +170,12 @@ const WorkerDashboard = () => {
       {/* ===== SUMMARY ===== */}
       <div className="bg-black border-2 border-white rounded-lg p-6">
         <h2 className="text-xl font-semibold text-white mb-2">
-          Ringkasan Sistem
+          System Summary
         </h2>
         <p className="text-gray-400">
-          Dashboard ini menampilkan ringkasan data akuarium, varietas ikan,
-          pertumbuhan, dan kondisi kesehatan ikan arwana secara visual
-          untuk membantu pengambilan keputusan manajemen.
+          This dashboard displays an overview of aquariums, fish species,
+          growth records, and fish health status, providing a visual summary
+          to assist in management decisions.
         </p>
       </div>
     </div>
@@ -197,4 +193,3 @@ const StatCard = ({ title, value, icon }) => (
 )
 
 export default WorkerDashboard
-

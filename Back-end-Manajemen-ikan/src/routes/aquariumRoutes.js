@@ -10,8 +10,8 @@ import { authMiddleware, adminOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/aquariums", getAllAquariums);
-router.get("/aquariums/:id", getAquariumById);
+router.get("/aquariums", authMiddleware, getAllAquariums);
+router.get("/aquariums/:id", authMiddleware, getAquariumById);
 
 // Hanya admin yang boleh membuat, mengubah, dan menghapus Aquarium
 router.post("/aquariums", authMiddleware, adminOnly, createAquarium);

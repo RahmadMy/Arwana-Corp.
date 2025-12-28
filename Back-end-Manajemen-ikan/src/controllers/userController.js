@@ -194,6 +194,14 @@ export const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // 🔒 Cegah hapus akun sendiri
+    if (req.user.id === Number(id)) {
+      return res.status(403).json({
+        success: false,
+        message: "Tidak bisa menghapus akun sendiri",
+      });
+    }
+
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({
@@ -202,11 +210,11 @@ export const deleteUser = async (req, res) => {
       });
     }
 
-    // OPTIONAL: prevent deleting admin
+    // Optional: jika ingin admin tidak bisa dihapus sama sekali
     if (user.role === "admin") {
       return res.status(403).json({
         success: false,
-        message: "Admin cannot be deleted",
+        message: "Admin tidak boleh dihapus",
       });
     }
 
@@ -214,7 +222,7 @@ export const deleteUser = async (req, res) => {
 
     res.json({
       success: true,
-      message: "User has been deleted successfully",
+      message: "User berhasil dihapus",
     });
   } catch (error) {
     res.status(500).json({
@@ -223,6 +231,7 @@ export const deleteUser = async (req, res) => {
     });
   }
 };
+
 
 /* =====================================================
    LOGIN

@@ -10,6 +10,8 @@ const AdminUsers = () => {
   const [selectedId, setSelectedId] = useState(null)
 
   const [error, setError] = useState('')
+  const currentUser = JSON.parse(localStorage.getItem('user'))  
+  const currentUserId = currentUser?.id
 
   const [formData, setFormData] = useState({
     name: '',
@@ -174,14 +176,33 @@ const AdminUsers = () => {
                 {/* DELETE */}
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="text-white hover:text-red-500"
+                  disabled={currentUserId === item.id} // disable jika akun sendiri
+                  className={`text-white p-2 rounded ${
+                    currentUserId === item.id
+                      ? 'opacity-40 cursor-not-allowed'
+                      : 'hover:text-red-500'
+                  }`}
+                  title={
+                    currentUserId === item.id
+                      ? 'Tidak bisa menghapus akun sendiri'
+                      : 'Hapus user'
+                  }
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
                       d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                     />
                   </svg>
                 </button>
+
               </div>
             </div>
           ))

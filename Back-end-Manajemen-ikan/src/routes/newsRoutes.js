@@ -12,9 +12,9 @@ import { authMiddleware, adminOnly } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // Siapa saja boleh melihat daftar/detail berita
-router.get("/news", getAllNews);
+router.get("/news", authMiddleware,getAllNews);
 router.get("/news/published", getPublishedNews);
-router.get("/news/:id", getNewsById);
+router.get("/news/:id", authMiddleware,getNewsById);
 
 
 // Hanya admin yang boleh membuat, mengubah, dan menghapus berita

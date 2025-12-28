@@ -42,7 +42,11 @@ export const getAllAquariums = async (req, res) => {
       where,
       include: [
         { model: User, as: "owner" },
-        { model: FishGrowth, as: "growth" }, // 🔥 TAMBAHAN
+        {
+          model: FishGrowth,
+          as: "growth",
+          required: false, // 🔹 penting
+        },
       ],
     });
 

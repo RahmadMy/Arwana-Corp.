@@ -7,17 +7,20 @@ import {
   deleteUser,
   login,
 } from "../controllers/userController.js";
+import { authMiddleware, adminOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Auth route
+// Public route: login
 router.post("/login", login);
 
-// User routes
-router.get("/users", getUsers);
-router.get("/users/:id", getUserById);
-router.post("/users", createUser);
-router.put("/users/:id", updateUser);
-router.delete("/users/:id", deleteUser);
+// Protected routes: hanya user login bisa akses
+router.get("/users", authMiddleware, adminOnly, getUsers); // hanya admin
+router.get("/users/:id", authMiddleware, adminOnly, getUserById); // hanya admin
+
+// Protected routes: admin-only
+router.post("/users", authMiddleware, adminOnly, createUser);
+router.put("/users/:id", authMiddleware, adminOnly, updateUser);
+router.delete("/users/:id", authMiddleware, adminOnly, deleteUser);
 
 export default router;

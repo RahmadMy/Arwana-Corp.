@@ -6,14 +6,16 @@ import {
   updateFishGrowth,
   deleteFishGrowth,
 } from "../controllers/fishGrowthController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/fish-growths", getAllFishGrowth);
-router.get("/fish-growths/:id", getFishGrowthById);
-router.post("/fish-growths", createFishGrowth);
-router.put("/fish-growths/:id", updateFishGrowth);
-router.delete("/fish-growths/:id", deleteFishGrowth);
+//routes → bisa diakses semua user login
+router.get("/fish-growths", authMiddleware, getAllFishGrowth);
+router.get("/fish-growths/:id", authMiddleware, getFishGrowthById);
+router.post("/fish-growths", authMiddleware, createFishGrowth);
+router.put("/fish-growths/:id", authMiddleware, updateFishGrowth);
+router.delete("/fish-growths/:id", authMiddleware, deleteFishGrowth);
 
 export default router;
 
