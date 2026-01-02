@@ -8,10 +8,12 @@ const AdminFishGrowth = () => {
   const [species, setSpecies] = useState([])
   const [aquariums, setAquariums] = useState([])
   const [loading, setLoading] = useState(true)
+  const [detailData, setDetailData] = useState(null)
 
   const [showModal, setShowModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
+  const [showDetailModal, setShowDetailModal] = useState(false)
 
   /* ===== DELETE MODAL STATE ===== */
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -119,6 +121,11 @@ const AdminFishGrowth = () => {
       console.error(err)
     }
   }
+  /* ===== DETAIL ===== */
+  const openDetailModal = (item) => {
+    setDetailData(item)
+    setShowDetailModal(true)
+  }
 
   /* ================= DELETE ================= */
   const openDeleteModal = (id) => {
@@ -183,6 +190,23 @@ const AdminFishGrowth = () => {
 
               <div className="flex justify-end gap-4 pt-4 mt-auto border-t border-white">
                 {/* EDIT */}
+                {/* DETAIL */}
+                <button
+                  onClick={() => openDetailModal(item)}
+                  className="text-white hover:text-yellow-400"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5
+                        c4.478 0 8.268 2.943 9.542 7
+                        -1.274 4.057-5.064 7-9.542 7
+                        -4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                </button>
                 <button
                   onClick={() => openEditModal(item)}
                   className="text-white hover:text-orange-500"
@@ -335,6 +359,37 @@ const AdminFishGrowth = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* ===== DETAIL MODAL ===== */}
+      {showDetailModal && detailData && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-black border border-gray-700 rounded-xl w-full max-w-lg p-6">
+            <h2 className="text-xl font-semibold text-yellow-400 mb-4">
+              Detail Fish Growth
+            </h2>
+
+            <div className="space-y-2 text-gray-300 text-sm">
+              <p><b>Species:</b> {detailData.species?.namaVarietas}</p>
+              <p><b>Aquarium:</b> {detailData.aquarium?.namaAquarium}</p>
+              <p><b>Jumlah:</b> {detailData.jumlah}</p>
+              <p><b>Umur:</b> {detailData.umur}</p>
+              <p><b>Ukuran:</b> {detailData.ukuran}</p>
+              <p><b>Gender:</b> {detailData.gender || '-'}</p>
+              <p><b>Grade:</b> {detailData.grade || '-'}</p>
+              <p><b>Purpose:</b> {detailData.purpose || '-'}</p>
+              <p><b>Catatan:</b> {detailData.catatan}</p>
+            </div>
+
+            <div className="flex justify-end pt-6">
+              <button
+                onClick={() => setShowDetailModal(false)}
+                className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-2 rounded"
+              >
+                Tutup
+              </button>
+            </div>
           </div>
         </div>
       )}

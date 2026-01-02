@@ -388,6 +388,7 @@ export default function Home() {
         </div>
       </div>
     </section>
+    {/* Our Fish*/}
     <section
       id="product"
       className="relative py-24"
@@ -397,7 +398,7 @@ export default function Home() {
         {/* HEADER */}
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-white">
-            Our Products
+            Our Arwana
           </h2>
           <p className="mt-4 text-orange-400 max-w-2xl mx-auto">
             We offer premium Arowana products cultivated through sustainable

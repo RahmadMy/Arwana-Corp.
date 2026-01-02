@@ -9,7 +9,7 @@ const PublicLayout = ({ children }) => {
     { label: 'Home', id: 'home' },
     { label: 'News', id: 'news' },
     { label: 'About', id: 'about' },
-    { label: 'Product', id: 'product' },
+    { label: 'Arwana', id: 'product' },
     { label: 'Archive', id: 'archive' }
   ]
 
