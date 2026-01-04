@@ -22,12 +22,13 @@ export const createFeedingSchedule = async (req, res) => {
       return res.status(404).json({ message: "Pakan tidak ditemukan" });
     }
 
-    const existing = await FeedingSchedule.findOne({ where: { fishGrowthId } });
-    if (existing) {
-      return res
-        .status(400)
-        .json({ message: "Data pertumbuhan ini sudah memiliki jadwal pakan" });
-    }
+    // Constraint check removed for One-to-Many
+    // const existing = await FeedingSchedule.findOne({ where: { fishGrowthId } });
+    // if (existing) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Data pertumbuhan ini sudah memiliki jadwal pakan" });
+    // }
 
     const schedule = await FeedingSchedule.create({
       waktuPemberian,
@@ -35,11 +36,13 @@ export const createFeedingSchedule = async (req, res) => {
       fishGrowthId,
       feedId,
     });
-  
-    await growth.update({
-      feedingScheduleId: schedule.id,
-    });
-    
+
+    if (growth.feedingScheduleId !== undefined) {
+      await growth.update({
+        feedingScheduleId: schedule.id,
+      });
+    }
+
     res.status(201).json({
       message: "Jadwal pakan berhasil dibuat dan Fish Growth berhasil diperbarui",
       data: schedule,
@@ -98,12 +101,13 @@ export const updateFeedingSchedule = async (req, res) => {
       if (!growth) {
         return res.status(404).json({ message: "Data pertumbuhan tidak ditemukan" });
       }
-      const exists = await FeedingSchedule.findOne({ where: { fishGrowthId } });
-      if (exists && exists.id !== schedule.id) {
-        return res
-          .status(400)
-          .json({ message: "Data pertumbuhan ini sudah memiliki jadwal pakan" });
-      }
+      // Constraint check removed for One-to-Many
+      // const exists = await FeedingSchedule.findOne({ where: { fishGrowthId } });
+      // if (exists && exists.id !== schedule.id) {
+      //   return res
+      //     .status(400)
+      //     .json({ message: "Data pertumbuhan ini sudah memiliki jadwal pakan" });
+      // }
       schedule.fishGrowthId = fishGrowthId;
     }
 

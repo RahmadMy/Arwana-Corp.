@@ -19,12 +19,13 @@ export const createFishHealth = async (req, res) => {
         .json({ message: "Data pertumbuhan tidak ditemukan" });
     }
 
-    const existing = await FishHealth.findOne({ where: { fishGrowthId } });
-    if (existing) {
-      return res.status(400).json({
-        message: "Data pertumbuhan ini sudah memiliki data kesehatan",
-      });
-    }
+    // Constraint check removed for One-to-Many relationship
+    // const existing = await FishHealth.findOne({ where: { fishGrowthId } });
+    // if (existing) {
+    //   return res.status(400).json({
+    //     message: "Data pertumbuhan ini sudah memiliki data kesehatan",
+    //   });
+    // }
 
     // 1️⃣ CREATE FISH HEALTH
     const health = await FishHealth.create({
@@ -35,10 +36,13 @@ export const createFishHealth = async (req, res) => {
       fishGrowthId,
     });
 
-    // 2️⃣ UPDATE FISH GROWTH (INI KUNCI)
-    await growth.update({
-      fishHealthId: health.id,
-    });
+    // 2️⃣ UPDATE FISH GROWTH (Removed specific 1-to-1 link update if not needed, or keep for 'latest' status)
+    // For One-to-Many, we might not need to update a single fishHealthId on Growth unless it tracks the "status"
+    if (growth.fishHealthId !== undefined) {
+      await growth.update({
+        fishHealthId: health.id,
+      });
+    }
 
     res.status(201).json({
       message:
@@ -96,14 +100,15 @@ export const updateFishHealth = async (req, res) => {
         return res.status(404).json({ message: "Data pertumbuhan tidak ditemukan" });
       }
       // ensure one-to-one uniqueness
-      const exists = await FishHealth.findOne({
-        where: { fishGrowthId },
-      });
-      if (exists && exists.id !== health.id) {
-        return res
-          .status(400)
-          .json({ message: "Data pertumbuhan ini sudah memiliki data kesehatan" });
-      }
+      // Constraint check removed for One-to-Many relationship
+      // const exists = await FishHealth.findOne({
+      //   where: { fishGrowthId },
+      // });
+      // if (exists && exists.id !== health.id) {
+      //   return res
+      //     .status(400)
+      //     .json({ message: "Data pertumbuhan ini sudah memiliki data kesehatan" });
+      // }
       health.fishGrowthId = fishGrowthId;
     }
 

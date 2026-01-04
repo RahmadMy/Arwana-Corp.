@@ -15,7 +15,7 @@ const FeedingSchedule = db.define("feeding_schedules", {
       model: FishGrowth,
       key: "id",
     },
-    unique: true, // one-to-one
+    // unique: true // one-to-one
   },
   feedId: {
     type: DataTypes.INTEGER,
@@ -30,7 +30,7 @@ FeedingSchedule.belongsTo(FishGrowth, {
   foreignKey: "fishGrowthId",
   as: "growth",
 });
-FishGrowth.hasOne(FeedingSchedule, {
+FishGrowth.hasMany(FeedingSchedule, {
   foreignKey: "fishGrowthId",
   as: "feedingSchedule",
 });

@@ -16,12 +16,12 @@ const FishHealth = db.define("fish_healths", {
       model: FishGrowth,
       key: "id",
     },
-    unique: true, // one-to-one
+    // unique: true constraint removed to allow multiple health records (One-to-Many)
   },
 });
 
 FishHealth.belongsTo(FishGrowth, { foreignKey: "fishGrowthId", as: "growth" });
-FishGrowth.hasOne(FishHealth, { foreignKey: "fishGrowthId", as: "health" });
+FishGrowth.hasMany(FishHealth, { foreignKey: "fishGrowthId", as: "health" });
 
 export default FishHealth;
 
