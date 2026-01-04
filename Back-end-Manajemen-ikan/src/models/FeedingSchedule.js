@@ -5,7 +5,7 @@ import Feed from "./Feed.js";
 
 const FeedingSchedule = db.define("feeding_schedules", {
   waktuPemberian: {
-    type: DataTypes.DATE,
+    type: DataTypes.TIME,
     allowNull: false,
   },
   jumlahPakan: DataTypes.STRING,
