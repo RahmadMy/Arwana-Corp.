@@ -10,7 +10,9 @@ import {
   FaUsers,
   FaNewspaper,
   FaHome,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaBars,
+  FaTimes
 } from 'react-icons/fa'
 
 const AdminLayout = ({ children }) => {
@@ -21,6 +23,7 @@ const AdminLayout = ({ children }) => {
   // State for collapsible menus (default open for visibility)
   const [openFish, setOpenFish] = useState(true)
   const [openSystem, setOpenSystem] = useState(true)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   /* ================= ACTIVE HELPERS ================= */
   const isExactActive = (path) => location.pathname === path
@@ -47,10 +50,32 @@ const AdminLayout = ({ children }) => {
   const isSystemActive = systemPaths.some(isPrefixActive)
 
   return (
-    <div className="min-h-screen bg-black flex font-sans selection:bg-orange-500 selection:text-white">
+    <div className="min-h-screen bg-black flex font-sans selection:bg-orange-500 selection:text-white relative">
+
+      {/* ================= MOBILE TOGGLE ================= */}
+      <div className="md:hidden fixed top-0 left-0 w-full z-40 bg-black/80 backdrop-blur-md border-b border-zinc-800 p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img src={companyIcon} alt="logo" className="w-8 h-8" />
+          <span className="text-white font-bold text-lg">Arowana Corp.</span>
+        </div>
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="text-white p-2"
+        >
+          {isSidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
+      </div>
 
       {/* ================= SIDEBAR ================= */}
-      <aside className="fixed left-0 top-0 h-full w-64 bg-zinc-900/80 border-r border-zinc-800 backdrop-blur-xl flex flex-col z-50">
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <aside className={`fixed left-0 top-0 h-full w-64 bg-zinc-900/95 md:bg-zinc-900/80 border-r border-zinc-800 backdrop-blur-xl flex flex-col z-50 transition-transform duration-300 ease-in-out md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
 
         {/* Glow Effect */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-600 opacity-80" />
@@ -72,9 +97,10 @@ const AdminLayout = ({ children }) => {
           {/* Dashboard */}
           <Link
             to="/admin/dashboard"
+            onClick={() => setIsSidebarOpen(false)}
             className={`group flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${isExactActive('/admin/dashboard')
-                ? 'bg-gradient-to-r from-orange-500/20 to-transparent text-white border-l-2 border-orange-500'
-                : 'hover:bg-zinc-800 hover:text-white'
+              ? 'bg-gradient-to-r from-orange-500/20 to-transparent text-white border-l-2 border-orange-500'
+              : 'hover:bg-zinc-800 hover:text-white'
               }`}
           >
             <FaHome className={`w-4 h-4 transition-colors ${isExactActive('/admin/dashboard') ? 'text-orange-500' : 'text-gray-500 group-hover:text-white'}`} />
@@ -107,9 +133,10 @@ const AdminLayout = ({ children }) => {
 
                 <Link
                   to="/admin/aquariums"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/admin/aquariums')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>Aquarium</span>
@@ -117,9 +144,10 @@ const AdminLayout = ({ children }) => {
 
                 <Link
                   to="/admin/fish-species"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/admin/fish-species')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>Fish Species</span>
@@ -127,9 +155,10 @@ const AdminLayout = ({ children }) => {
 
                 <Link
                   to="/admin/feed"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/admin/feed')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>Feed</span>
@@ -138,9 +167,10 @@ const AdminLayout = ({ children }) => {
                 {/* FISH MANAGEMENT (Formerly Fish Growth) - MOVED HERE AS REQUESTED */}
                 <Link
                   to="/admin/fish-growth"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/admin/fish-growth')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>Fish Management</span>
@@ -174,18 +204,20 @@ const AdminLayout = ({ children }) => {
             {openSystem && (
               <div className="mt-1 ml-4 pl-4 border-l border-zinc-700 space-y-1">
                 <Link to="/admin/users"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/admin/users')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>Users</span>
                 </Link>
 
                 <Link to="/admin/news"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/admin/news')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>News</span>
@@ -223,21 +255,21 @@ const AdminLayout = ({ children }) => {
       </aside>
 
       {/* ================= MAIN CONTENT ================= */}
-      <div className="flex-1 ml-64 flex flex-col bg-black relative">
+      <div className="flex-1 md:ml-64 flex flex-col bg-black relative w-full">
         {/* Top Header */}
-        <header className="px-8 py-5 flex justify-between items-center backdrop-blur-sm sticky top-0 z-40 border-b border-zinc-800/50 bg-black/80">
+        <header className="px-6 md:px-8 py-5 flex justify-between items-center backdrop-blur-sm sticky top-0 z-30 border-b border-zinc-800/50 bg-black/80 mt-16 md:mt-0">
           <div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">
+            <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
                 Welcome back,
               </span>{' '}
               <span className="text-orange-500">{user?.name?.split(' ')[0] || 'Admin'}</span>
             </h2>
-            <p className="text-gray-500 text-sm mt-1">Here's what's happening with your facility today.</p>
+            <p className="text-gray-500 text-xs md:text-sm mt-1">Here's what's happening with your facility today.</p>
           </div>
         </header>
 
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
           {children}
         </main>
       </div>

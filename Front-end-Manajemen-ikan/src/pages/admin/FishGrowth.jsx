@@ -132,22 +132,7 @@ const AdminFishGrowth = () => {
     setShowModal(true)
   }
 
-  const openEditModal = (item) => {
-    setIsEdit(true)
-    setSelectedId(item.id)
-    setFormData({
-      speciesId: item.speciesId || '',
-      aquariumId: item.aquariumId || '',
-      jumlah: item.jumlah || '',
-      umur: item.umur || '',
-      ukuran: item.ukuran || '',
-      catatan: item.catatan || '',
-      gender: item.gender || '',
-      grade: item.grade || '',
-      purpose: item.purpose || '',
-    })
-    setShowModal(true)
-  }
+
 
   /* ================= FORM ================= */
   const handleChange = (e) => {

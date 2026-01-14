@@ -118,14 +118,14 @@ const AdminAquariums = () => {
     <div className="relative">
 
       {/* ===== HEADER ===== */}
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-5xl font-bold text-yellow-400 uppercase">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+        <h1 className="text-3xl md:text-5xl font-bold text-yellow-400 uppercase">
           Aquariums
         </h1>
 
         <button
           onClick={openAddModal}
-          className="bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded-lg"
+          className="bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded-lg w-full md:w-auto"
         >
           + Add Aquarium
         </button>

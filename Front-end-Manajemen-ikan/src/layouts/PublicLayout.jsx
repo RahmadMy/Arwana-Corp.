@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useState } from 'react'
 import companyIcon from '../assets/images/company-icon.png'
+import { FaBars, FaTimes } from 'react-icons/fa'
 
 const PublicLayout = ({ children }) => {
   const { user, logout } = useAuth()
+  const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
     { label: 'Home', id: 'home' },
@@ -14,6 +17,7 @@ const PublicLayout = ({ children }) => {
   ]
 
   const handleScroll = (id) => {
+    setIsOpen(false) // Close menu on click
     document.getElementById(id)?.scrollIntoView({
       behavior: 'smooth',
       block: 'start'
@@ -37,13 +41,13 @@ const PublicLayout = ({ children }) => {
               alt="Arowana Corp."
               className="w-10 h-10 object-contain"
             />
-            <span className="font-bold text-2xl">
+            <span className="font-bold text-xl md:text-2xl">
               Arowana <span className="text-orange-500">Corp.</span>
             </span>
           </button>
 
-          {/* Navigation */}
-          <nav className="flex items-center gap-10">
+          {/* Navigation (Desktop) */}
+          <nav className="hidden md:flex items-center gap-10">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -55,8 +59,8 @@ const PublicLayout = ({ children }) => {
             ))}
           </nav>
 
-          {/* Right Side */}
-          <div className="flex items-center gap-4">
+          {/* Right Side (Auth) */}
+          <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
                 <span className="text-sm">{user.name}</span>
@@ -76,7 +80,53 @@ const PublicLayout = ({ children }) => {
               </Link>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden text-white focus:outline-none"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+          </button>
         </div>
+
+        {/* ================= MOBILE MENU ================= */}
+        {isOpen && (
+          <div className="md:hidden bg-black border-b border-white/20">
+            <nav className="flex flex-col px-6 py-4 space-y-4">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleScroll(item.id)}
+                  className="text-left hover:text-orange-500 transition py-2"
+                >
+                  {item.label}
+                </button>
+              ))}
+              <div className="border-t border-white/10 pt-4 mt-2">
+                {user ? (
+                  <div className="flex flex-col gap-3">
+                    <span className="text-sm text-gray-400">Hi, {user.name}</span>
+                    <button
+                      onClick={logout}
+                      className="text-left py-2 hover:text-orange-500"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    to="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="block w-full text-center px-4 py-3 bg-orange-500 hover:bg-orange-600 rounded-lg font-medium"
+                  >
+                    Login
+                  </Link>
+                )}
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* ================= MAIN ================= */}

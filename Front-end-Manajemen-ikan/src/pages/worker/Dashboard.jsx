@@ -89,7 +89,7 @@ const WorkerDashboard = () => {
 
   return (
     <div>
-      <h1 className="text-5xl font-bold text-yellow-400 mb-8 uppercase">
+      <h1 className="text-3xl md:text-5xl font-bold text-yellow-400 mb-8 uppercase">
         Dashboard
       </h1>
 

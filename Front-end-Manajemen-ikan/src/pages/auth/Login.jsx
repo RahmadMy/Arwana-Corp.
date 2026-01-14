@@ -29,6 +29,7 @@ const Login = () => {
         setError(result.error || 'Login gagal. Periksa email dan password Anda.')
       }
     } catch (err) {
+      console.error(err)
       setError('Terjadi kesalahan. Silakan coba lagi.')
     } finally {
       setLoading(false)
@@ -40,9 +41,9 @@ const Login = () => {
       <div className="max-w-md w-full bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-lg p-8 shadow-xl">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <img 
-              src={companyIcon} 
-              alt="Arowana Corp." 
+            <img
+              src={companyIcon}
+              alt="Arowana Corp."
               className="w-16 h-16 object-contain"
             />
           </div>

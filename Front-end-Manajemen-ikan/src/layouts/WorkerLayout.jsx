@@ -7,7 +7,9 @@ import {
   FaFish,
   FaEllipsisH,
   FaHome,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaBars,
+  FaTimes
 } from 'react-icons/fa'
 
 const WorkerLayout = ({ children }) => {
@@ -16,6 +18,7 @@ const WorkerLayout = ({ children }) => {
   const location = useLocation()
 
   const [openFish, setOpenFish] = useState(true)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   /* ================= ACTIVE HELPERS ================= */
   const isExactActive = (path) => location.pathname === path
@@ -32,10 +35,32 @@ const WorkerLayout = ({ children }) => {
   const isFishOperationActive = fishOperationPaths.some(isPrefixActive)
 
   return (
-    <div className="min-h-screen bg-black flex font-sans selection:bg-orange-500 selection:text-white">
+    <div className="min-h-screen bg-black flex font-sans selection:bg-orange-500 selection:text-white relative">
+
+      {/* ================= MOBILE TOGGLE ================= */}
+      <div className="md:hidden fixed top-0 left-0 w-full z-40 bg-black/80 backdrop-blur-md border-b border-zinc-800 p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img src={companyIcon} alt="logo" className="w-8 h-8" />
+          <span className="text-white font-bold text-lg">Arowana Corp.</span>
+        </div>
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="text-white p-2"
+        >
+          {isSidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
+      </div>
 
       {/* ================= SIDEBAR ================= */}
-      <aside className="fixed left-0 top-0 h-full w-64 bg-zinc-900/80 border-r border-zinc-800 backdrop-blur-xl flex flex-col z-50">
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <aside className={`fixed left-0 top-0 h-full w-64 bg-zinc-900/95 md:bg-zinc-900/80 border-r border-zinc-800 backdrop-blur-xl flex flex-col z-50 transition-transform duration-300 ease-in-out md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
 
         {/* Glow Effect */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-600 opacity-80" />
@@ -57,9 +82,10 @@ const WorkerLayout = ({ children }) => {
           {/* Dashboard */}
           <Link
             to="/worker/dashboard"
+            onClick={() => setIsSidebarOpen(false)}
             className={`group flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${isExactActive('/worker/dashboard')
-                ? 'bg-gradient-to-r from-orange-500/20 to-transparent text-white border-l-2 border-orange-500'
-                : 'hover:bg-zinc-800 hover:text-white'
+              ? 'bg-gradient-to-r from-orange-500/20 to-transparent text-white border-l-2 border-orange-500'
+              : 'hover:bg-zinc-800 hover:text-white'
               }`}
           >
             <FaHome className={`w-4 h-4 transition-colors ${isExactActive('/worker/dashboard') ? 'text-orange-500' : 'text-gray-500 group-hover:text-white'}`} />
@@ -92,9 +118,10 @@ const WorkerLayout = ({ children }) => {
 
                 <Link
                   to="/worker/aquariums"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/worker/aquariums')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>Aquarium</span>
@@ -102,9 +129,10 @@ const WorkerLayout = ({ children }) => {
 
                 <Link
                   to="/worker/fish-species"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/worker/fish-species')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>Fish Species</span>
@@ -112,9 +140,10 @@ const WorkerLayout = ({ children }) => {
 
                 <Link
                   to="/worker/feed"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/worker/feed')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>Feed</span>
@@ -123,9 +152,10 @@ const WorkerLayout = ({ children }) => {
                 {/* FISH MANAGEMENT (Formerly Fish Growth) */}
                 <Link
                   to="/worker/fish-growth"
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/worker/fish-growth')
-                      ? 'bg-orange-500/10 text-orange-400 font-medium'
-                      : 'hover:bg-zinc-800 hover:text-white'
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
                 >
                   <span>Fish Management</span>
@@ -164,21 +194,21 @@ const WorkerLayout = ({ children }) => {
       </aside>
 
       {/* ================= MAIN CONTENT ================= */}
-      <div className="flex-1 ml-64 flex flex-col bg-black relative">
+      <div className="flex-1 md:ml-64 flex flex-col bg-black relative w-full">
         {/* Top Header */}
-        <header className="px-8 py-5 flex justify-between items-center backdrop-blur-sm sticky top-0 z-40 border-b border-zinc-800/50 bg-black/80">
+        <header className="px-6 md:px-8 py-5 flex justify-between items-center backdrop-blur-sm sticky top-0 z-30 border-b border-zinc-800/50 bg-black/80 mt-16 md:mt-0">
           <div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">
+            <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
                 Hello,
               </span>{' '}
               <span className="text-orange-500">{user?.name?.split(' ')[0] || 'Worker'}</span>
             </h2>
-            <p className="text-gray-500 text-sm mt-1">Ready for today's tasks?</p>
+            <p className="text-gray-500 text-xs md:text-sm mt-1">Ready for today's tasks?</p>
           </div>
         </header>
 
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
           {children}
         </main>
       </div>

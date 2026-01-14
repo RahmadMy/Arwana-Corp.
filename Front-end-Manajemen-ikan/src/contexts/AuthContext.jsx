@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }) => {
         user: data.user
       }
     } catch (error) {
+      console.error('Login error:', error)
       return {
         success: false,
         error: 'Gagal terhubung ke server'
@@ -78,6 +79,7 @@ export const AuthProvider = ({ children }) => {
       const loginResult = await login(email, password)
       return loginResult
     } catch (error) {
+      console.error('Register error:', error)
       return {
         success: false,
         error: 'Gagal terhubung ke server'

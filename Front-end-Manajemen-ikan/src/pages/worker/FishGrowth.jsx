@@ -132,23 +132,7 @@ const WorkerFishGrowth = () => {
     setShowModal(true)
   }
 
-  const openEditModal = (item) => {
-    // Legacy Edit Modal support if needed, but we are moving to Detail Edit
-    setIsEdit(true)
-    setSelectedId(item.id)
-    setFormData({
-      speciesId: item.speciesId || '',
-      aquariumId: item.aquariumId || '',
-      jumlah: item.jumlah || '',
-      umur: item.umur || '',
-      ukuran: item.ukuran || '',
-      catatan: item.catatan || '',
-      gender: item.gender || '',
-      grade: item.grade || '',
-      purpose: item.purpose || '',
-    })
-    setShowModal(true)
-  }
+
 
   /* ================= FORM ================= */
   const handleChange = (e) => {
