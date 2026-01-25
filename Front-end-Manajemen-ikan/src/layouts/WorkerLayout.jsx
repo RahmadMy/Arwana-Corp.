@@ -2,7 +2,15 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useState } from 'react'
 import companyIcon from '../assets/images/company-icon.png'
-import {FaWater,FaFish,FaEllipsisH,FaChartLine,FaHeartbeat,FaClock,FaCalendarCheck} from 'react-icons/fa'
+import {
+  FaWater,
+  FaFish,
+  FaEllipsisH,
+  FaHome,
+  FaSignOutAlt,
+  FaBars,
+  FaTimes
+} from 'react-icons/fa'
 
 const WorkerLayout = ({ children }) => {
   const { user, logout } = useAuth()
@@ -10,245 +18,187 @@ const WorkerLayout = ({ children }) => {
   const location = useLocation()
 
   const [openFish, setOpenFish] = useState(true)
-  const [openFishManagement, setOpenFishManagement] = useState(true)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
-  /* ================= ACTIVE HELPERS ================= */
   const isExactActive = (path) => location.pathname === path
   const isPrefixActive = (path) => location.pathname.startsWith(path)
-
-  /* ================= PATH GROUP ================= */
-  const fishManagementPaths = [
-    '/worker/fish-growth',
-    '/worker/fish-health',
-    '/worker/feeding-schedule',
-    '/worker/harvest',
-  ]
 
   const fishOperationPaths = [
     '/worker/aquariums',
     '/worker/fish-species',
     '/worker/feed',
-    ...fishManagementPaths,
+    '/worker/fish-growth',
   ]
 
   const isFishOperationActive = fishOperationPaths.some(isPrefixActive)
-  const isFishManagementActive = fishManagementPaths.some(isPrefixActive)
 
   return (
-    <div className="min-h-screen bg-black flex">
+    <div className="min-h-screen bg-black flex font-sans selection:bg-orange-500 selection:text-white relative">
 
-      {/* ================= SIDEBAR ================= */}
-      <aside className="fixed left-0 top-0 h-full w-64 bg-black border-r border-gray-800 flex flex-col">
+      <div className="md:hidden fixed top-0 left-0 w-full z-40 bg-black/80 backdrop-blur-md border-b border-zinc-800 p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img src={companyIcon} alt="logo" className="w-8 h-8" />
+          <span className="text-white font-bold text-lg">Arowana Corp.</span>
+        </div>
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="text-white p-2"
+        >
+          {isSidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
+      </div>
 
-        {/* Logo */}
-        <div className="px-4 py-4 border-b border-gray-800 flex items-center gap-2">
-          <img src={companyIcon} alt="logo" className="w-8 h-9" />
-          <span className="text-white font-bold text-2xl">
-            Arowana <span className="text-orange-500">Corp.</span>
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <aside className={`fixed left-0 top-0 h-full w-64 bg-zinc-900/95 md:bg-zinc-900/80 border-r border-zinc-800 backdrop-blur-xl flex flex-col z-50 transition-transform duration-300 ease-in-out md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-600 opacity-80" />
+
+        <div className="px-6 py-6 border-b border-zinc-800 flex items-center gap-3">
+          <div className="relative">
+            <div className="absolute inset-0 bg-orange-500 blur-sm opacity-20 rounded-full"></div>
+            <img src={companyIcon} alt="logo" className="w-8 h-9 relative z-10" />
+          </div>
+          <span className="text-white font-bold text-xl tracking-wide">
+            Arowana <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Corp.</span>
           </span>
         </div>
 
-        {/* Navigation */}
-        <nav className="p-4 flex-1 text-white space-y-1">
+        <nav className="p-4 flex-1 text-gray-400 space-y-2 overflow-y-auto custom-scrollbar">
 
-          {/* Dashboard */}
           <Link
             to="/worker/dashboard"
-            className={`block px-4 py-3 ${
-              isExactActive('/worker/dashboard')
-                ? 'border-l-4 border-orange-500 text-orange-500'
-                : 'hover:text-orange-500'
-            }`}
+            onClick={() => setIsSidebarOpen(false)}
+            className={`group flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${isExactActive('/worker/dashboard')
+              ? 'bg-gradient-to-r from-orange-500/20 to-transparent text-white border-l-2 border-orange-500'
+              : 'hover:bg-zinc-800 hover:text-white'
+              }`}
           >
-            Dashboard
+            <FaHome className={`w-4 h-4 transition-colors ${isExactActive('/worker/dashboard') ? 'text-orange-500' : 'text-gray-500 group-hover:text-white'}`} />
+            <span className="font-medium">Dashboard</span>
           </Link>
 
-          {/* ================= FISH OPERATIONS ================= */}
-          <button
-            onClick={() => setOpenFish(!openFish)}
-            className={`w-full flex items-center justify-between px-4 py-3 ${
-              isFishOperationActive ? 'text-orange-500' : 'hover:text-orange-500'
-            }`}
-          >
-            <span>Fish Operations</span>
-            <svg
-              className={`w-4 h-4 transition-transform ${openFish ? 'rotate-180' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div>
+            <button
+              onClick={() => setOpenFish(!openFish)}
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${isFishOperationActive ? 'text-white' : 'text-gray-400 hover:text-white hover:bg-zinc-800'
+                }`}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-
-          {openFish && (
-            <div className="ml-4 border-l border-gray-700 space-y-1 text-sm">
-
-              <Link
-                to="/worker/aquariums"
-                className={`flex items-center gap-3 px-4 py-2 ${
-                  isExactActive('/worker/aquariums')
-                    ? 'text-orange-500'
-                    : 'hover:text-orange-500'
-                }`}
+              <div className="flex items-center gap-3">
+                <FaWater className={`w-4 h-4 ${isFishOperationActive ? 'text-orange-500' : 'text-gray-500'}`} />
+                <span className="font-semibold text-xs uppercase tracking-wider">Operations</span>
+              </div>
+              <svg
+                className={`w-3 h-3 transition-transform duration-200 ${openFish ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                <FaWater className="w-4 h-4" />
-                <span>Aquarium</span>
-              </Link>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
 
-              <Link
-                to="/worker/fish-species"
-                className={`flex items-center gap-3 px-4 py-2 ${
-                  isExactActive('/worker/fish-species')
-                    ? 'text-orange-500'
-                    : 'text-white hover:text-orange-500'
-                }`}
-              >
-                <FaFish className="w-4 h-4" />
-                <span>Fish Species</span>
-              </Link>
+            {openFish && (
+              <div className="mt-1 ml-4 pl-4 border-l border-zinc-700 space-y-1">
 
-              <Link
-                to="/worker/feed"
-                className={`flex items-center gap-3 px-4 py-2 ${
-                  isExactActive('/worker/feed')
-                    ? 'text-orange-500'
-                    : 'hover:text-orange-500'
-                }`}
-              >
-                <FaEllipsisH className="w-4 h-4" />
-                <span>Feed</span>
-              </Link>
-
-              {/* ================= FISH MANAGEMENT ================= */}
-              <button
-                onClick={() => setOpenFishManagement(!openFishManagement)}
-                className={`w-full flex items-center justify-between px-4 py-2 ${
-                  isFishManagementActive ? 'text-orange-500' : 'hover:text-orange-500'
-                }`}
-              >
-                <span>Fish Management</span>
-                <svg
-                  className={`w-4 h-4 transition-transform ${
-                    openFishManagement ? 'rotate-180' : ''
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <Link
+                  to="/worker/aquariums"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/worker/aquariums')
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
+                    }`}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
+                  <span>Aquarium</span>
+                </Link>
 
-              {openFishManagement && (
-                <div className="ml-4 border-l border-gray-600 space-y-1">
-
-                  <Link to="/worker/fish-growth"
-                    className={`flex items-center gap-3 px-4 py-2 ${
-                      isExactActive('/worker/fish-growth')
-                        ? 'text-orange-500'
-                        : 'hover:text-orange-500'
+                <Link
+                  to="/worker/fish-species"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/worker/fish-species')
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
-                  >
-                    <FaChartLine className="w-4 h-4" />
-                    <span>Fish Growth</span>
-                  </Link>
+                >
+                  <span>Fish Species</span>
+                </Link>
 
-                  <Link to="/worker/fish-health"
-                    className={`flex items-center gap-3 px-4 py-2 ${
-                      isExactActive('/worker/fish-health')
-                        ? 'text-orange-500'
-                        : 'hover:text-orange-500'
+                <Link
+                  to="/worker/feed"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/worker/feed')
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
-                  >
-                    <FaHeartbeat className="w-4 h-4" />
-                    <span>Fish Health</span>
-                  </Link>
+                >
+                  <span>Feed</span>
+                </Link>
 
-                  <Link to="/worker/feeding-schedule"
-                    className={`flex items-center gap-3 px-4 py-2 ${
-                      isExactActive('/worker/feeding-schedule')
-                        ? 'text-orange-500'
-                        : 'hover:text-orange-500'
+                <Link
+                  to="/worker/fish-growth"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${isExactActive('/worker/fish-growth')
+                    ? 'bg-orange-500/10 text-orange-400 font-medium'
+                    : 'hover:bg-zinc-800 hover:text-white'
                     }`}
-                  >
-                    <FaClock className="w-4 h-4" />
-                    <span>Feeding Schedule</span>
-                  </Link>
+                >
+                  <span>Fish Management</span>
+                </Link>
 
-                  <Link to="/worker/harvest"
-                    className={`flex items-center gap-3 px-4 py-2 ${
-                      isExactActive('/worker/harvest')
-                        ? 'text-orange-500'
-                        : 'hover:text-orange-500'
-                    }`}
-                  >
-                    <FaCalendarCheck className="w-4 h-4" />
-                    <span>Harvest Schedule</span>
-                  </Link>
-
-                </div>
-              )}
-
-            </div>
-          )}
+              </div>
+            )}
+          </div>
 
         </nav>
 
-        {/* Logout */}
-        <div className="p-4 border-t border-gray-800">
+        <div className="p-4 border-t border-zinc-800 bg-zinc-900/50">
+          <div className="flex items-center gap-3 mb-3 px-2">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-gray-600 flex items-center justify-center text-white font-bold shadow-lg">
+              {(user?.name || 'W')[0]}
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <p className="text-sm font-medium text-white truncate">{user?.name || 'Worker'}</p>
+              <p className="text-xs text-orange-500">Staff Member</p>
+            </div>
+          </div>
+
           <button
             onClick={() => {
               logout()
               navigate('/')
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-white hover:text-orange-500 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 hover:bg-red-500/10 hover:text-red-400 text-gray-400 transition-all text-sm font-medium group"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"
-              />
-            </svg>
-            <span>Logout</span>
+            <FaSignOutAlt className="w-4 h-4 group-hover:text-red-400 transition-colors" />
+            <span>Sign Out</span>
           </button>
         </div>
+
       </aside>
 
-      {/* ================= MAIN ================= */}
-      <div className="flex-1 ml-64 flex flex-col">
-        <header className="bg-black border-b border-gray-800 px-6 py-4 flex justify-between">
-        <span className="text-white font-semibold">Worker Dashboard</span>
-
-        <div className="flex items-center gap-3 text-white">
-          <div className="flex flex-col items-end">
-            <span className="text-sm">{user?.name || 'User'}</span>
-            <span className="text-xs text-orange-500">Worker</span>
+      <div className="flex-1 md:ml-64 flex flex-col bg-black relative w-full">
+        <header className="px-6 md:px-8 py-5 flex justify-between items-center backdrop-blur-sm sticky top-0 z-30 border-b border-zinc-800/50 bg-black/80 mt-16 md:mt-0">
+          <div>
+            <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                Hello,
+              </span>{' '}
+              <span className="text-orange-500">{user?.name?.split(' ')[0] || 'Worker'}</span>
+            </h2>
+            <p className="text-gray-500 text-xs md:text-sm mt-1">Ready for today's tasks?</p>
           </div>
+        </header>
 
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-black text-xs font-bold">
-              {(user?.name || 'W')[0]}
-            </span>
-          </div>
-        </div>
-      </header>
-
-        <main className="flex-1 bg-black text-white p-6 overflow-auto">
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
           {children}
         </main>
       </div>
+
     </div>
   )
 }

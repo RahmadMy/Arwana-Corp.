@@ -1,19 +1,23 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useState } from 'react'
 import companyIcon from '../assets/images/company-icon.png'
+import { FaBars, FaTimes } from 'react-icons/fa'
 
 const PublicLayout = ({ children }) => {
   const { user, logout } = useAuth()
+  const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
     { label: 'Home', id: 'home' },
     { label: 'News', id: 'news' },
     { label: 'About', id: 'about' },
-    { label: 'Product', id: 'product' },
+    { label: 'Arwana', id: 'product' },
     { label: 'Archive', id: 'archive' }
   ]
 
   const handleScroll = (id) => {
+    setIsOpen(false)
     document.getElementById(id)?.scrollIntoView({
       behavior: 'smooth',
       block: 'start'
@@ -23,11 +27,9 @@ const PublicLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col text-white relative bg-black">
 
-      {/* ================= HEADER ================= */}
       <header className="border-b border-white/20 sticky top-0 z-50 backdrop-blur-sm bg-black/40">
         <div className="w-full mx-auto px-6 py-4 flex items-center justify-between">
 
-          {/* Logo */}
           <button
             onClick={() => handleScroll('home')}
             className="flex items-center gap-2"
@@ -37,13 +39,12 @@ const PublicLayout = ({ children }) => {
               alt="Arowana Corp."
               className="w-10 h-10 object-contain"
             />
-            <span className="font-bold text-2xl">
+            <span className="font-bold text-xl md:text-2xl">
               Arowana <span className="text-orange-500">Corp.</span>
             </span>
           </button>
 
-          {/* Navigation */}
-          <nav className="flex items-center gap-10">
+          <nav className="hidden md:flex items-center gap-10">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -55,8 +56,7 @@ const PublicLayout = ({ children }) => {
             ))}
           </nav>
 
-          {/* Right Side */}
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
                 <span className="text-sm">{user.name}</span>
@@ -76,20 +76,60 @@ const PublicLayout = ({ children }) => {
               </Link>
             )}
           </div>
+
+          <button
+            className="md:hidden text-white focus:outline-none"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+          </button>
         </div>
+
+        {isOpen && (
+          <div className="md:hidden bg-black border-b border-white/20">
+            <nav className="flex flex-col px-6 py-4 space-y-4">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleScroll(item.id)}
+                  className="text-left hover:text-orange-500 transition py-2"
+                >
+                  {item.label}
+                </button>
+              ))}
+              <div className="border-t border-white/10 pt-4 mt-2">
+                {user ? (
+                  <div className="flex flex-col gap-3">
+                    <span className="text-sm text-gray-400">Hi, {user.name}</span>
+                    <button
+                      onClick={logout}
+                      className="text-left py-2 hover:text-orange-500"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    to="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="block w-full text-center px-4 py-3 bg-orange-500 hover:bg-orange-600 rounded-lg font-medium"
+                  >
+                    Login
+                  </Link>
+                )}
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
 
-      {/* ================= MAIN ================= */}
       <main className="flex-grow w-full">
         {children}
       </main>
 
-      {/* ================= FOOTER (TETAP PUNYA KAMU) ================= */}
       <footer className="bg-black text-gray-400 border-t border-white/10">
-        {/* ================= CENTER CONTENT ================= */}
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20">
 
-          {/* QUOTE */}
           <div className="text-center mb-16">
             <p className="text-sm italic text-gray-300 max-w-3xl mx-auto">
               “Every milestone we achieve is a step toward a more sustainable and
@@ -102,10 +142,8 @@ const PublicLayout = ({ children }) => {
             <div className="mt-6 h-px w-full bg-white/10" />
           </div>
 
-          {/* LOCATION & MAP */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-20">
 
-            {/* LOCATION */}
             <div className="border border-white/15 rounded-2xl p-8 bg-white/5">
               <h4 className="text-white font-semibold mb-4">
                 Our Location
@@ -129,7 +167,6 @@ const PublicLayout = ({ children }) => {
               </div>
             </div>
 
-            {/* MAP */}
             <div className="border border-white/15 rounded-2xl overflow-hidden bg-white/5">
               <iframe
                 title="Arowana Corp Location"
@@ -141,7 +178,6 @@ const PublicLayout = ({ children }) => {
 
           </div>
 
-          {/* CTA BOX */}
           <div className="border border-white/15 rounded-2xl p-8 bg-gradient-to-r from-white/5 to-white/0 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h4 className="text-xl font-semibold text-orange-400 mb-2">
@@ -163,11 +199,9 @@ const PublicLayout = ({ children }) => {
 
         </div>
 
-        {/* ================= FULL WIDTH LINKS ================= */}
         <div className="border-t border-white/10 py-16">
           <div className="w-full px-6 lg:px-10 grid grid-cols-1 md:grid-cols-4 gap-10 text-sm">
 
-            {/* USEFUL LINKS */}
             <div>
               <h5 className="text-white font-semibold mb-4">Useful Links</h5>
               <ul className="space-y-2">
@@ -178,7 +212,6 @@ const PublicLayout = ({ children }) => {
               </ul>
             </div>
 
-            {/* RESOURCES */}
             <div>
               <h5 className="text-white font-semibold mb-4">Resources</h5>
               <ul className="space-y-2">
@@ -189,7 +222,6 @@ const PublicLayout = ({ children }) => {
               </ul>
             </div>
 
-            {/* INSIGHTS */}
             <div>
               <h5 className="text-white font-semibold mb-4">Insights</h5>
               <ul className="space-y-2">
@@ -200,7 +232,6 @@ const PublicLayout = ({ children }) => {
               </ul>
             </div>
 
-            {/* SEARCH */}
             <div>
               <h5 className="text-white font-semibold mb-4">
                 Search What You Want to Know
@@ -219,7 +250,6 @@ const PublicLayout = ({ children }) => {
           </div>
         </div>
 
-        {/* ================= BOTTOM BAR ================= */}
         <div className="border-t border-white/10 py-6">
           <div className="w-full px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
 

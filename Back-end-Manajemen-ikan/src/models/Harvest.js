@@ -16,12 +16,13 @@ const Harvest = db.define("harvests", {
       model: FishGrowth,
       key: "id",
     },
-    unique: true, // one-to-one
+    // Constraint check removed for One-to-Many relationship
+    // unique: true // one-to-one
   },
 });
 
 Harvest.belongsTo(FishGrowth, { foreignKey: "fishGrowthId", as: "growth" });
-FishGrowth.hasOne(Harvest, { foreignKey: "fishGrowthId", as: "harvest" });
+FishGrowth.hasMany(Harvest, { foreignKey: "fishGrowthId", as: "harvest" });
 
 export default Harvest;
 

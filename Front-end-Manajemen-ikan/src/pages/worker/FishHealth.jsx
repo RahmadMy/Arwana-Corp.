@@ -120,14 +120,14 @@ const WorkerFishHealth = () => {
     <div>
 
       {/* ===== HEADER ===== */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-5xl font-bold text-yellow-400 uppercase">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <h1 className="text-3xl md:text-5xl font-bold text-yellow-400 uppercase">
           Fish Health
         </h1>
 
         <button
           onClick={openAddModal}
-          className="bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded-lg"
+          className="bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded-lg w-full md:w-auto"
         >
           + Add Health Record
         </button>
@@ -226,13 +226,17 @@ const WorkerFishHealth = () => {
                 ))}
               </select>
 
-              <input
+              <select
                 name="kondisi"
                 value={formData.kondisi}
                 onChange={handleChange}
-                placeholder="Kondisi"
                 className="w-full bg-black border border-gray-600 text-white px-4 py-2 rounded"
-              />
+              >
+                <option value="">Select Condition</option>
+                <option value="Healthy">Healthy</option>
+                <option value="Sick">Sick</option>
+                <option value="Injured">Injured</option>
+              </select>
 
               <input
                 name="tindakan"

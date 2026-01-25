@@ -10,11 +10,9 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// GET routes → bisa diakses semua user login
+//routes → bisa diakses semua user login
 router.get("/fish-healths", authMiddleware, getAllFishHealth);
 router.get("/fish-healths/:id", authMiddleware, getFishHealthById);
-
-// Protected routes → hanya admin yang bisa mengubah data
 router.post("/fish-healths", authMiddleware, createFishHealth);
 router.put("/fish-healths/:id", authMiddleware, updateFishHealth);
 router.delete("/fish-healths/:id", authMiddleware, deleteFishHealth);

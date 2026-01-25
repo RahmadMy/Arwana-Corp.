@@ -23,7 +23,6 @@ const AdminFeedingSchedule = () => {
     waktuPemberian: '',
   })
 
-  /* ================= FETCH ================= */
   const fetchSchedule = async () => {
     try {
       const res = await feedingScheduleService.getAll()
@@ -49,7 +48,6 @@ const AdminFeedingSchedule = () => {
     fetchDropdowns()
   }, [])
 
-  /* ================= MODAL ================= */
   const openAddModal = () => {
     setIsEdit(false)
     setSelectedId(null)
@@ -74,7 +72,6 @@ const AdminFeedingSchedule = () => {
     setShowModal(true)
   }
 
-  /* ================= FORM ================= */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
@@ -94,7 +91,6 @@ const AdminFeedingSchedule = () => {
     }
   }
 
-  /* ================= DELETE ================= */
   const openDeleteModal = (id) => {
     setDeleteId(id)
     setShowDeleteModal(true)
@@ -118,21 +114,19 @@ const AdminFeedingSchedule = () => {
   return (
     <div>
 
-      {/* ===== HEADER ===== */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-5xl font-bold text-yellow-400 uppercase">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <h1 className="text-3xl md:text-5xl font-bold text-yellow-400 uppercase">
           Feeding Schedule
         </h1>
 
         <button
           onClick={openAddModal}
-          className="bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded-lg"
+          className="bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded-lg w-full md:w-auto"
         >
           + Add Feeding Schedule
         </button>
       </div>
 
-      {/* ===== GRID ===== */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {schedule.length > 0 ? (
           schedule.map((item) => (
@@ -158,9 +152,7 @@ const AdminFeedingSchedule = () => {
                 </p>
               </div>
 
-              {/* ACTION */}
               <div className="flex justify-end gap-4 pt-4 mt-auto border-t border-white">
-                {/* EDIT */}
                 <button
                   onClick={() => openEditModal(item)}
                   className="text-white hover:text-orange-500"
@@ -172,7 +164,6 @@ const AdminFeedingSchedule = () => {
                   </svg>
                 </button>
 
-                {/* DELETE */}
                 <button
                   onClick={() => openDeleteModal(item.id)}
                   className="text-white hover:text-red-500"
@@ -193,7 +184,6 @@ const AdminFeedingSchedule = () => {
         )}
       </div>
 
-      {/* ===== MODAL ADD / EDIT ===== */}
       {showModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="bg-black border border-gray-700 rounded-xl w-full max-w-lg p-6">
@@ -266,38 +256,37 @@ const AdminFeedingSchedule = () => {
         </div>
       )}
 
-      {/* ===== DELETE MODAL ===== */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-        <div className="bg-black border border-gray-600 rounded-xl w-full max-w-md p-6">
-          <h2 className="text-xl font-semibold text-yellow-400 mb-4">
-            Hapus Feeding Schedule
-          </h2>
+          <div className="bg-black border border-gray-600 rounded-xl w-full max-w-md p-6">
+            <h2 className="text-xl font-semibold text-yellow-400 mb-4">
+              Hapus Feeding Schedule
+            </h2>
 
-          <p className="text-gray-300 mb-6">
-            Apakah kamu yakin ingin menghapus data ini?
-            <span className="text-yellow-400 font-semibold">
-              {' '}Tindakan ini tidak bisa dibatalkan.
-            </span>
-          </p>
+            <p className="text-gray-300 mb-6">
+              Apakah kamu yakin ingin menghapus data ini?
+              <span className="text-yellow-400 font-semibold">
+                {' '}Tindakan ini tidak bisa dibatalkan.
+              </span>
+            </p>
 
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={() => setShowDeleteModal(false)}
-              className="text-gray-400 hover:text-white"
-            >
-              Batal
-            </button>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                Batal
+              </button>
 
-            <button
-              onClick={confirmDelete}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-2 rounded"
-            >
-              Ya, Hapus
-            </button>
+              <button
+                onClick={confirmDelete}
+                className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-2 rounded"
+              >
+                Ya, Hapus
+              </button>
+            </div>
           </div>
         </div>
-      </div>
       )}
 
     </div>

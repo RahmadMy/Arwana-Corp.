@@ -16,12 +16,13 @@ export const createHarvest = async (req, res) => {
       return res.status(404).json({ message: "Data pertumbuhan tidak ditemukan" });
     }
 
-    const existing = await Harvest.findOne({ where: { fishGrowthId } });
-    if (existing) {
-      return res
-        .status(400)
-        .json({ message: "Data pertumbuhan ini sudah memiliki data panen" });
-    }
+    // Constraint check removed for One-to-Many
+    // const existing = await Harvest.findOne({ where: { fishGrowthId } });
+    // if (existing) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Data pertumbuhan ini sudah memiliki data panen" });
+    // }
 
     const harvest = await Harvest.create({
       tanggalPanen,
@@ -31,10 +32,12 @@ export const createHarvest = async (req, res) => {
       fishGrowthId,
     });
 
-    // 2️⃣ UPDATE FISH GROWTH (INI KUNCI)
-    await growth.update({
-      harvestId: harvest.id,
-    });
+    // 2️⃣ UPDATE FISH GROWTH (Optional: keep track of latest harvest, or remove if not needed)
+    if (growth.harvestId !== undefined) {
+      await growth.update({
+        harvestId: harvest.id,
+      });
+    }
 
     res.status(201).json({
       message: "Data panen berhasil dibuat dan Fish Growth berhasil diperbarui",
@@ -88,12 +91,13 @@ export const updateHarvest = async (req, res) => {
       if (!growth) {
         return res.status(404).json({ message: "Data pertumbuhan tidak ditemukan" });
       }
-      const exists = await Harvest.findOne({ where: { fishGrowthId } });
-      if (exists && exists.id !== harvest.id) {
-        return res
-          .status(400)
-          .json({ message: "Data pertumbuhan ini sudah memiliki data panen" });
-      }
+      // Constraint check removed for One-to-Many
+      // const exists = await Harvest.findOne({ where: { fishGrowthId } });
+      // if (exists && exists.id !== harvest.id) {
+      //   return res
+      //     .status(400)
+      //     .json({ message: "Data pertumbuhan ini sudah memiliki data panen" });
+      // }
       harvest.fishGrowthId = fishGrowthId;
     }
 
@@ -121,7 +125,7 @@ export const deleteHarvest = async (req, res) => {
     if (growth) {
       await growth.update({ harvestId: null });
     }
-      
+
     await harvest.destroy();
     res.json({ message: "Data panen berhasil dihapus dan Fish Growth berhasil diperbarui" });
   } catch (error) {

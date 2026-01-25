@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }) => {
 
       setUser(data.user)
       localStorage.setItem('user', JSON.stringify(data.user))
-      // Simpan token sederhana (id user) untuk dipakai di header Authorization
       if (data.token) {
         localStorage.setItem('token', data.token)
       }
@@ -46,6 +45,7 @@ export const AuthProvider = ({ children }) => {
         user: data.user
       }
     } catch (error) {
+      console.error('Login error:', error)
       return {
         success: false,
         error: 'Gagal terhubung ke server'
@@ -53,7 +53,6 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  // default register role becomes 'petugas' (staff)
   const register = async (name, email, password, role = 'petugas') => {
     try {
       const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'
@@ -74,10 +73,10 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
-      // Auto login setelah register berhasil
       const loginResult = await login(email, password)
       return loginResult
     } catch (error) {
+      console.error('Register error:', error)
       return {
         success: false,
         error: 'Gagal terhubung ke server'
@@ -92,7 +91,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   const isAdmin = () => user?.role === 'admin'
-  // worker area can be accessed by admin and 'petugas' (staff)
   const isWorker = () =>
     user?.role === 'admin' ||
     user?.role === 'petugas'
