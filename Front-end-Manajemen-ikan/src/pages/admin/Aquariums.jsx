@@ -9,11 +9,9 @@ const AdminAquariums = () => {
   const [isEdit, setIsEdit] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
 
-  /* ===== DELETE MODAL STATE (BARU) ===== */
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
 
-  /* ===== CANNOT DELETE MODAL STATE (BARU) ===== */
   const [showCannotDeleteModal, setShowCannotDeleteModal] = useState(false)
 
   const [formData, setFormData] = useState({
@@ -24,7 +22,6 @@ const AdminAquariums = () => {
     catatan: '',
   })
 
-  /* ================= FETCH ================= */
   const fetchAquariums = async () => {
     try {
       const res = await aquariumService.getAll()
@@ -40,7 +37,6 @@ const AdminAquariums = () => {
     fetchAquariums()
   }, [])
 
-  /* ================= MODAL ================= */
   const openAddModal = () => {
     setIsEdit(false)
     setSelectedId(null)
@@ -67,7 +63,6 @@ const AdminAquariums = () => {
     setShowModal(true)
   }
 
-  /* ================= FORM ================= */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
@@ -87,10 +82,8 @@ const AdminAquariums = () => {
     }
   }
 
-  /* ================= DELETE (DIUBAH) ================= */
   const openDeleteModal = (item) => {
     if (item.growth) {
-      // Jika ada ikan, tampilkan modal info tidak bisa hapus
       setDeleteId(null)
       setShowCannotDeleteModal(true)
     } else {
@@ -117,7 +110,6 @@ const AdminAquariums = () => {
   return (
     <div className="relative">
 
-      {/* ===== HEADER ===== */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
         <h1 className="text-3xl md:text-5xl font-bold text-yellow-400 uppercase">
           Aquariums
@@ -131,7 +123,6 @@ const AdminAquariums = () => {
         </button>
       </div>
 
-      {/* ===== GRID ===== */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {aquariums.length === 0 ? (
           <div className="col-span-full text-center text-gray-400 py-12 text-lg">
@@ -143,10 +134,8 @@ const AdminAquariums = () => {
               key={item.id}
               className="group relative bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-yellow-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-400/10 flex flex-col"
             >
-              {/* Top Accent Line */}
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
 
-              {/* CONTENT */}
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-2xl font-bold text-white leading-tight">
@@ -191,7 +180,6 @@ const AdminAquariums = () => {
                   )}
                 </div>
 
-                {/* NOTE */}
                 {item.catatan && (
                   <p className="text-sm text-gray-500 italic mb-6 pl-3 border-l-2 border-gray-800">
                     "{item.catatan}"
@@ -225,11 +213,9 @@ const AdminAquariums = () => {
         )}
       </div>
 
-      {/* ===== DELETE MODAL (DIUBAH) ===== */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
-            {/* Red Accent Background */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-red-700" />
 
             <div className="flex flex-col items-center text-center mb-6">
@@ -263,7 +249,6 @@ const AdminAquariums = () => {
         </div>
       )}
 
-      {/* ===== CANNOT DELETE MODAL ===== */}
       {showCannotDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md p-6 shadow-2xl relative">
@@ -292,12 +277,10 @@ const AdminAquariums = () => {
         </div>
       )}
 
-      {/* ===== MODAL ADD / EDIT (MODERNIZED) ===== */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-lg shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
 
-            {/* Header */}
             <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-black/20">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
                 {isEdit ? (
@@ -324,7 +307,6 @@ const AdminAquariums = () => {
               </button>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5">
               <div className="space-y-4">
                 <div>
@@ -390,7 +372,6 @@ const AdminAquariums = () => {
               </div>
             </form>
 
-            {/* Footer */}
             <div className="p-4 border-t border-gray-800 bg-black/20 flex justify-end gap-3">
               <button
                 type="button"

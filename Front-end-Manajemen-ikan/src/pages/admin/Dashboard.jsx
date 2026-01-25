@@ -53,7 +53,6 @@ const AdminDashboard = () => {
         const totalFish =
           growths.data?.reduce((sum, g) => sum + (g.jumlah || 0), 0) || 0
 
-        // Categorize Health
         const healthyFish = healths.data?.filter(h =>
           ['Sehat', 'Healthy'].includes(h.kondisi)
         ).length || 0
@@ -66,14 +65,12 @@ const AdminDashboard = () => {
           ['Cedera', 'Luka', 'Injured'].includes(h.kondisi)
         ).length || 0
 
-        // Grafik pertumbuhan
         const growthData =
           growths.data?.map((g, i) => ({
             name: `Record ${i + 1}`,
             jumlah: g.jumlah || 0
           })) || []
 
-        // Grafik kesehatan
         const healthData = [
           { name: 'Healthy', value: healthyFish },
           { name: 'Sick', value: sickFish },
@@ -110,7 +107,6 @@ const AdminDashboard = () => {
         Dashboard
       </h1>
 
-      {/* ===== STAT CARDS ===== */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <StatCard
           title="Total Aquariums"
@@ -138,11 +134,8 @@ const AdminDashboard = () => {
         />
       </div>
 
-      {/* ===== CHARTS ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Growth Chart */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg shadow-yellow-400/5 relative overflow-hidden">
-          {/* Top Divider */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-500" />
 
           <h2 className="text-white font-bold text-lg mb-6 flex items-center gap-2">
@@ -172,7 +165,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Health Chart */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg shadow-green-500/5 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-emerald-600" />
 
@@ -207,7 +199,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* ===== SUMMARY ===== */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 relative overflow-hidden">
         <div className="absolute left-0 top-0 h-full w-1 bg-gray-700" />
         <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">

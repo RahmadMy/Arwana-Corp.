@@ -9,11 +9,9 @@ const AdminFeed = () => {
   const [isEdit, setIsEdit] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
 
-  /* ===== DELETE MODAL STATE ===== */
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
 
-  /* ===== BLOCK DELETE MODAL (opsional) ===== */
   const [showBlockedModal, setShowBlockedModal] = useState(false)
 
   const [formData, setFormData] = useState({
@@ -22,7 +20,6 @@ const AdminFeed = () => {
     deskripsi: '',
   })
 
-  /* ================= FETCH ================= */
   const fetchFeed = async () => {
     try {
       const res = await feedService.getAll()
@@ -38,7 +35,6 @@ const AdminFeed = () => {
     fetchFeed()
   }, [])
 
-  /* ================= FORM ================= */
   const openAddModal = () => {
     setIsEdit(false)
     setFormData({
@@ -79,9 +75,7 @@ const AdminFeed = () => {
     }
   }
 
-  /* ================= DELETE ================= */
   const openDeleteModal = (item) => {
-    // Jika feed sedang dipakai di growth (misal item.growthCount > 0), blokir
     if (item.growthCount && item.growthCount > 0) {
       setShowBlockedModal(true)
     } else {
@@ -108,8 +102,6 @@ const AdminFeed = () => {
   return (
     <div>
 
-      {/* ===== HEADER ===== */}
-      {/* ===== HEADER ===== */}
       <div className="flex justify-between items-center mb-10">
         <h1 className="text-5xl font-bold text-yellow-400 uppercase">
           Feed Inventory
@@ -124,7 +116,6 @@ const AdminFeed = () => {
         </button>
       </div>
 
-      {/* ===== GRID ===== */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {feed.length > 0 ? (
           feed.map((item) => (
@@ -132,10 +123,8 @@ const AdminFeed = () => {
               key={item.id}
               className="group relative bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-yellow-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-400/10 flex flex-col"
             >
-              {/* Top Accent Line */}
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
 
-              {/* CONTENT */}
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-2xl font-bold text-white leading-tight">
@@ -160,7 +149,6 @@ const AdminFeed = () => {
                   </div>
                 </div>
 
-                {/* ACTION */}
                 <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-800">
                   <button
                     onClick={() => openEditModal(item)}
@@ -192,12 +180,10 @@ const AdminFeed = () => {
         )}
       </div>
 
-      {/* ===== MODAL ADD / EDIT (MODERNIZED) ===== */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-lg shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
 
-            {/* Header */}
             <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-black/20">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
                 {isEdit ? (
@@ -224,7 +210,6 @@ const AdminFeed = () => {
               </button>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5">
               <div className="space-y-4">
                 <div>
@@ -266,7 +251,6 @@ const AdminFeed = () => {
               </div>
             </form>
 
-            {/* Footer */}
             <div className="p-4 border-t border-gray-800 bg-black/20 flex justify-end gap-3">
               <button
                 type="button"
@@ -286,11 +270,9 @@ const AdminFeed = () => {
         </div>
       )}
 
-      {/* ===== DELETE MODAL (DIUBAH) ===== */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
-            {/* Red Accent Background */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-red-700" />
 
             <div className="flex flex-col items-center text-center mb-6">
@@ -324,7 +306,6 @@ const AdminFeed = () => {
         </div>
       )}
 
-      {/* ===== BLOCKED MODAL (DIUBAH) ===== */}
       {showBlockedModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md p-6 shadow-2xl relative">

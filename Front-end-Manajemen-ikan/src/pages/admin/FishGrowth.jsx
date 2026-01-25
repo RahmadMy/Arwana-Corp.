@@ -13,7 +13,6 @@ const AdminFishGrowth = () => {
   const [aquariums, setAquariums] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // Detail Data States
   const [detailData, setDetailData] = useState(null)
   const [healths, setHealths] = useState([])
   const [harvests, setHarvests] = useState([])
@@ -26,11 +25,10 @@ const AdminFishGrowth = () => {
   const [selectedId, setSelectedId] = useState(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
 
-  /* ===== DELETE MODAL STATE ===== */
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
-  const [deleteType, setDeleteType] = useState('growth') // 'growth', 'health', 'feeding', 'harvest'
+  const [deleteType, setDeleteType] = useState('growth')
 
   const [formData, setFormData] = useState({
     speciesId: '',
@@ -44,7 +42,6 @@ const AdminFishGrowth = () => {
     purpose: '',
   })
 
-  // Sub-forms for Detail Modal
   const [healthForm, setHealthForm] = useState({
     tanggalPemerikasaan: '',
     kondisi: '',
@@ -64,12 +61,10 @@ const AdminFishGrowth = () => {
     waktuPemberian: '',
   })
 
-  // State for sub-feature editing
   const [editingHealthId, setEditingHealthId] = useState(null)
   const [editingHarvestId, setEditingHarvestId] = useState(null)
   const [editingFeedingId, setEditingFeedingId] = useState(null)
 
-  /* ================= FETCH ================= */
   const fetchGrowth = async () => {
     try {
       const res = await fishGrowthService.getAll()
@@ -115,7 +110,6 @@ const AdminFishGrowth = () => {
     fetchFeeds()
   }, [])
 
-  /* ================= MODAL ================= */
   const openAddModal = () => {
     setIsEdit(false)
     setSelectedId(null)
@@ -133,9 +127,6 @@ const AdminFishGrowth = () => {
     setShowModal(true)
   }
 
-
-
-  /* ================= FORM ================= */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
@@ -155,10 +146,8 @@ const AdminFishGrowth = () => {
     }
   }
 
-  /* ===== DETAIL & SUB-FEATURES ===== */
   const openDetailModal = async (item) => {
     setDetailData(item)
-    // Populate form data for editing in the Info tab
     setFormData({
       speciesId: item.speciesId || '',
       aquariumId: item.aquariumId || '',
@@ -174,7 +163,6 @@ const AdminFishGrowth = () => {
     setActiveTab('info')
     setShowDetailModal(true)
 
-    // Fetch related data
     try {
       const [hRes, pRes, fRes] = await Promise.all([
         fishHealthService.getAll(),
@@ -182,7 +170,6 @@ const AdminFishGrowth = () => {
         feedingScheduleService.getAll()
       ])
 
-      // Filter locally for this fish growth ID (assuming API returns all)
       const healthsUnfiltered = hRes.data || []
       const harvestsUnfiltered = pRes.data || []
       const feedsUnfiltered = fRes.data || []
@@ -208,7 +195,6 @@ const AdminFishGrowth = () => {
     }
   }
 
-  // Helper for single-record view
   const currentHealth = healths.find(h => h.fishGrowthId === detailData?.id)
   const currentFeeding = schedules.find(s => s.fishGrowthId === detailData?.id)
   const currentHarvest = harvests.find(h => h.fishGrowthId === detailData?.id)
@@ -217,13 +203,11 @@ const AdminFishGrowth = () => {
     if (!detailData) return
     try {
       if (currentHealth) {
-        // Update existing
         await fishHealthService.update(currentHealth.id, {
           ...healthForm,
           fishGrowthId: parseInt(detailData.id)
         })
       } else {
-        // Create new
         await fishHealthService.create({
           ...healthForm,
           fishGrowthId: parseInt(detailData.id)
@@ -232,13 +216,12 @@ const AdminFishGrowth = () => {
 
       const res = await fishHealthService.getAll()
       setHealths((res.data || []).filter(x => x.fishGrowthId === detailData.id))
-      setEditingHealthId(null) // Turn off edit mode
+      setEditingHealthId(null)
     } catch (err) {
       console.error(err)
     }
   }
 
-  // Auto-fill form if editing
   useEffect(() => {
     if (editingHealthId && currentHealth) {
       setHealthForm({
@@ -259,7 +242,6 @@ const AdminFishGrowth = () => {
     openDeleteModal(currentHealth.id, 'health')
   }
 
-  // Auto-fill form if editing
   useEffect(() => {
     if (editingHarvestId && currentHarvest) {
       setHarvestForm({
@@ -303,7 +285,6 @@ const AdminFishGrowth = () => {
     openDeleteModal(currentHarvest.id, 'harvest')
   }
 
-  // Auto-fill form if editing
   useEffect(() => {
     if (editingFeedingId && currentFeeding) {
       setFeedingForm({
@@ -347,8 +328,6 @@ const AdminFishGrowth = () => {
     openDeleteModal(currentFeeding.id, 'feeding')
   }
 
-  /* ================= DELETE ================= */
-  /* ================= DELETE ================= */
   const openDeleteModal = (id, type = 'growth') => {
     setDeleteId(id)
     setDeleteType(type)
@@ -390,8 +369,6 @@ const AdminFishGrowth = () => {
 
   return (
     <div>
-
-      {/* ===== HEADER ===== */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-5xl font-bold text-yellow-400 uppercase">
           Fish Growth
@@ -405,7 +382,6 @@ const AdminFishGrowth = () => {
         </button>
       </div>
 
-      {/* ===== GRID ===== */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {growth.length > 0 ? (
           growth.map((item) => (
@@ -413,7 +389,6 @@ const AdminFishGrowth = () => {
               key={item.id}
               className="group relative bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-yellow-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-400/10 flex flex-col"
             >
-              {/* Top Accent Line */}
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
 
               <div className="p-6 flex-1 flex flex-col">
@@ -435,7 +410,6 @@ const AdminFishGrowth = () => {
                   </div>
                 </div>
 
-                {/* Key Stats Row */}
                 <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-black/40 rounded-lg border border-gray-800/50">
                   <div>
                     <span className="text-xs text-gray-500 uppercase tracking-wide">Jumlah</span>
@@ -450,7 +424,6 @@ const AdminFishGrowth = () => {
                   </div>
                 </div>
 
-                {/* Purpose & Note */}
                 <div className="space-y-3 mb-6 flex-1">
                   <div className="flex items-center gap-2 text-sm text-gray-300">
                     <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -466,7 +439,6 @@ const AdminFishGrowth = () => {
                 </div>
 
                 <div className="flex items-center gap-3 pt-4 border-t border-gray-800 mt-auto">
-                  {/* DETAIL / EDIT */}
                   <button
                     onClick={() => openDetailModal(item)}
                     className="flex-1 bg-gray-800 hover:bg-gray-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 group-hover:bg-yellow-400 group-hover:text-black"
@@ -477,7 +449,6 @@ const AdminFishGrowth = () => {
                     Detail & Edit
                   </button>
 
-                  {/* DELETE */}
                   <button
                     onClick={() => openDeleteModal(item.id)}
                     className="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
@@ -500,12 +471,9 @@ const AdminFishGrowth = () => {
         )}
       </div>
 
-      {/* ===== MODAL ADD (STANDALONE) - MODERNIZED ===== */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-lg shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
-
-            {/* Header */}
             <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-black/20">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
                 {isEdit ? (
@@ -532,10 +500,7 @@ const AdminFishGrowth = () => {
               </button>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5">
-
-              {/* SPECIES & AQUARIUM ROW */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Species</label>
@@ -574,7 +539,6 @@ const AdminFishGrowth = () => {
                 </div>
               </div>
 
-              {/* STATS ROW 1 */}
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Quantity</label>
@@ -608,7 +572,6 @@ const AdminFishGrowth = () => {
                 </div>
               </div>
 
-              {/* STATS ROW 2 */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Gender</label>
@@ -641,7 +604,6 @@ const AdminFishGrowth = () => {
                 </div>
               </div>
 
-              {/* PURPOSE */}
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Purpose</label>
                 <select
@@ -659,7 +621,6 @@ const AdminFishGrowth = () => {
                 </select>
               </div>
 
-              {/* NOTES */}
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Notes</label>
                 <textarea
@@ -671,10 +632,8 @@ const AdminFishGrowth = () => {
                   className="w-full bg-black border border-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all resize-none"
                 />
               </div>
-
             </form>
 
-            {/* Footer */}
             <div className="p-4 border-t border-gray-800 bg-black/20 flex justify-end gap-3">
               <button
                 type="button"
@@ -695,11 +654,9 @@ const AdminFishGrowth = () => {
         </div>
       )}
 
-      {/* ===== DELETE MODAL (MODERNIZED) ===== */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
-            {/* Red Accent Background */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-red-700" />
 
             <div className="flex flex-col items-center text-center mb-6">
@@ -738,12 +695,9 @@ const AdminFishGrowth = () => {
         </div>
       )}
 
-      {/* ===== DETAIL MODAL (MODERNIZED) ===== */}
       {showDetailModal && detailData && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-4xl shadow-2xl relative flex flex-col max-h-[90vh]">
-
-            {/* Header */}
             <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-black/20 sticky top-0 z-10">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-yellow-400/10 text-yellow-400 flex items-center justify-center">
@@ -767,10 +721,7 @@ const AdminFishGrowth = () => {
               </button>
             </div>
 
-            {/* Scrollable Content */}
             <div className="overflow-y-auto p-6">
-
-              {/* TABS HEADER */}
               <div className="flex border-b border-gray-700 mb-6">
                 {[
                   { id: 'info', label: 'General Info' },
@@ -791,12 +742,9 @@ const AdminFishGrowth = () => {
                 ))}
               </div>
 
-              {/* TAB CONTENT: INFO */}
               {activeTab === 'info' && (
                 <form onSubmit={handleInfoUpdate} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                    {/* SPECIES */}
                     <div>
                       <label className="text-gray-500 text-sm mb-1 block">Species</label>
                       <select
@@ -815,7 +763,6 @@ const AdminFishGrowth = () => {
                       </select>
                     </div>
 
-                    {/* AQUARIUM */}
                     <div>
                       <label className="text-gray-500 text-sm mb-1 block">Aquarium</label>
                       <select
@@ -834,7 +781,6 @@ const AdminFishGrowth = () => {
                       </select>
                     </div>
 
-                    {/* QUANTITY */}
                     <div>
                       <label className="text-gray-500 text-sm mb-1 block">Quantity</label>
                       <input
@@ -846,7 +792,6 @@ const AdminFishGrowth = () => {
                       />
                     </div>
 
-                    {/* AGE */}
                     <div>
                       <label className="text-gray-500 text-sm mb-1 block">Age (Days)</label>
                       <input
@@ -858,7 +803,6 @@ const AdminFishGrowth = () => {
                       />
                     </div>
 
-                    {/* SIZE */}
                     <div>
                       <label className="text-gray-500 text-sm mb-1 block">Size (cm)</label>
                       <input
@@ -870,7 +814,6 @@ const AdminFishGrowth = () => {
                       />
                     </div>
 
-                    {/* GENDER */}
                     <div>
                       <label className="text-gray-500 text-sm mb-1 block">Gender</label>
                       <select
@@ -885,7 +828,6 @@ const AdminFishGrowth = () => {
                       </select>
                     </div>
 
-                    {/* GRADE */}
                     <div>
                       <label className="text-gray-500 text-sm mb-1 block">Grade</label>
                       <select
@@ -903,7 +845,6 @@ const AdminFishGrowth = () => {
                       </select>
                     </div>
 
-                    {/* PURPOSE */}
                     <div>
                       <label className="text-gray-500 text-sm mb-1 block">Purpose</label>
                       <select
@@ -923,7 +864,6 @@ const AdminFishGrowth = () => {
 
                   </div>
 
-                  {/* CATATAN */}
                   <div>
                     <label className="text-gray-500 text-sm mb-1 block">Note</label>
                     <textarea
@@ -950,11 +890,8 @@ const AdminFishGrowth = () => {
                 </form>
               )}
 
-              {/* TAB CONTENT: HEALTH */}
               {activeTab === 'health' && (
                 <div className="space-y-6">
-
-                  {/* 1. If data exists AND NOT editing -> Show Detail Card */}
                   {currentHealth && !editingHealthId && (
                     <div className="bg-gray-900 p-6 rounded-xl border border-gray-700 space-y-4">
                       <div className="flex justify-between items-start">
@@ -989,7 +926,6 @@ const AdminFishGrowth = () => {
                     </div>
                   )}
 
-                  {/* 2. If NO data OR is editing -> Show Form */}
                   {(!currentHealth || editingHealthId) && (
                     <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-700">
                       <h4 className="text-yellow-400 font-bold mb-4 flex items-center gap-2">
@@ -1006,8 +942,6 @@ const AdminFishGrowth = () => {
                         )}
                       </h4>
                       <form onSubmit={handleHealthSubmit} className="space-y-4">
-
-                        {/* DATE */}
                         <div>
                           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Check Date</label>
                           <input
@@ -1020,7 +954,6 @@ const AdminFishGrowth = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {/* CONDITION */}
                           <div>
                             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Condition</label>
                             <select
@@ -1035,7 +968,6 @@ const AdminFishGrowth = () => {
                             </select>
                           </div>
 
-                          {/* ACTION */}
                           <div>
                             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Action / Treatment</label>
                             <input
@@ -1047,7 +979,6 @@ const AdminFishGrowth = () => {
                           </div>
                         </div>
 
-                        {/* DESCRIPTION */}
                         <div>
                           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Description</label>
                           <textarea
@@ -1079,11 +1010,8 @@ const AdminFishGrowth = () => {
                 </div>
               )}
 
-              {/* TAB CONTENT: FEEDING */}
               {activeTab === 'feeding' && (
                 <div className="space-y-6">
-
-                  {/* 1. Detail View */}
                   {currentFeeding && !editingFeedingId && (
                     <div className="bg-gray-900 p-6 rounded-xl border border-gray-700 space-y-4">
                       <div className="flex justify-between items-start">
@@ -1114,7 +1042,6 @@ const AdminFishGrowth = () => {
                     </div>
                   )}
 
-                  {/* 2. Add/Edit Form */}
                   {(!currentFeeding || editingFeedingId) && (
                     <div className="bg-gray-900/50 p-4 rounded border border-gray-700">
                       <h4 className="text-yellow-400 font-semibold mb-3">
@@ -1189,11 +1116,8 @@ const AdminFishGrowth = () => {
                 </div>
               )}
 
-              {/* TAB CONTENT: HARVEST */}
               {activeTab === 'harvest' && (
                 <div className="space-y-6">
-
-                  {/* 1. Detail View */}
                   {currentHarvest && !editingHarvestId && (
                     <div className="bg-gray-900 p-6 rounded-xl border border-gray-700 space-y-4">
                       <div className="flex justify-between items-start">
@@ -1224,7 +1148,6 @@ const AdminFishGrowth = () => {
                     </div>
                   )}
 
-                  {/* 2. Add/Edit Form */}
                   {(!currentHarvest || editingHarvestId) && (
                     <div className="bg-gray-900/50 p-4 rounded border border-gray-700">
                       <h4 className="text-yellow-400 font-semibold mb-3">
@@ -1284,11 +1207,9 @@ const AdminFishGrowth = () => {
         </div>
       )}
 
-      {/* ===== DELETE MODAL (MODERNIZED) ===== */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
-            {/* Red Accent Background */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-red-700" />
 
             <div className="flex flex-col items-center text-center mb-6">
@@ -1322,13 +1243,10 @@ const AdminFishGrowth = () => {
         </div>
       )}
 
-      {/* ===== SUCCESS MODAL ===== */}
       {showSuccessModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-sm p-6 shadow-2xl relative overflow-hidden animate-fadeIn">
-            {/* Green Accent Background */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600" />
-
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-4 text-green-500">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">

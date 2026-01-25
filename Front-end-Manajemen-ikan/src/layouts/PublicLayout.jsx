@@ -17,7 +17,7 @@ const PublicLayout = ({ children }) => {
   ]
 
   const handleScroll = (id) => {
-    setIsOpen(false) // Close menu on click
+    setIsOpen(false)
     document.getElementById(id)?.scrollIntoView({
       behavior: 'smooth',
       block: 'start'
@@ -27,11 +27,9 @@ const PublicLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col text-white relative bg-black">
 
-      {/* ================= HEADER ================= */}
       <header className="border-b border-white/20 sticky top-0 z-50 backdrop-blur-sm bg-black/40">
         <div className="w-full mx-auto px-6 py-4 flex items-center justify-between">
 
-          {/* Logo */}
           <button
             onClick={() => handleScroll('home')}
             className="flex items-center gap-2"
@@ -46,7 +44,6 @@ const PublicLayout = ({ children }) => {
             </span>
           </button>
 
-          {/* Navigation (Desktop) */}
           <nav className="hidden md:flex items-center gap-10">
             {navItems.map((item) => (
               <button
@@ -59,7 +56,6 @@ const PublicLayout = ({ children }) => {
             ))}
           </nav>
 
-          {/* Right Side (Auth) */}
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
@@ -81,7 +77,6 @@ const PublicLayout = ({ children }) => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-white focus:outline-none"
             onClick={() => setIsOpen(!isOpen)}
@@ -90,7 +85,6 @@ const PublicLayout = ({ children }) => {
           </button>
         </div>
 
-        {/* ================= MOBILE MENU ================= */}
         {isOpen && (
           <div className="md:hidden bg-black border-b border-white/20">
             <nav className="flex flex-col px-6 py-4 space-y-4">
@@ -129,17 +123,13 @@ const PublicLayout = ({ children }) => {
         )}
       </header>
 
-      {/* ================= MAIN ================= */}
       <main className="flex-grow w-full">
         {children}
       </main>
 
-      {/* ================= FOOTER (TETAP PUNYA KAMU) ================= */}
       <footer className="bg-black text-gray-400 border-t border-white/10">
-        {/* ================= CENTER CONTENT ================= */}
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20">
 
-          {/* QUOTE */}
           <div className="text-center mb-16">
             <p className="text-sm italic text-gray-300 max-w-3xl mx-auto">
               “Every milestone we achieve is a step toward a more sustainable and
@@ -152,10 +142,8 @@ const PublicLayout = ({ children }) => {
             <div className="mt-6 h-px w-full bg-white/10" />
           </div>
 
-          {/* LOCATION & MAP */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-20">
 
-            {/* LOCATION */}
             <div className="border border-white/15 rounded-2xl p-8 bg-white/5">
               <h4 className="text-white font-semibold mb-4">
                 Our Location
@@ -179,7 +167,6 @@ const PublicLayout = ({ children }) => {
               </div>
             </div>
 
-            {/* MAP */}
             <div className="border border-white/15 rounded-2xl overflow-hidden bg-white/5">
               <iframe
                 title="Arowana Corp Location"
@@ -191,7 +178,6 @@ const PublicLayout = ({ children }) => {
 
           </div>
 
-          {/* CTA BOX */}
           <div className="border border-white/15 rounded-2xl p-8 bg-gradient-to-r from-white/5 to-white/0 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h4 className="text-xl font-semibold text-orange-400 mb-2">
@@ -213,11 +199,9 @@ const PublicLayout = ({ children }) => {
 
         </div>
 
-        {/* ================= FULL WIDTH LINKS ================= */}
         <div className="border-t border-white/10 py-16">
           <div className="w-full px-6 lg:px-10 grid grid-cols-1 md:grid-cols-4 gap-10 text-sm">
 
-            {/* USEFUL LINKS */}
             <div>
               <h5 className="text-white font-semibold mb-4">Useful Links</h5>
               <ul className="space-y-2">
@@ -228,7 +212,6 @@ const PublicLayout = ({ children }) => {
               </ul>
             </div>
 
-            {/* RESOURCES */}
             <div>
               <h5 className="text-white font-semibold mb-4">Resources</h5>
               <ul className="space-y-2">
@@ -239,7 +222,6 @@ const PublicLayout = ({ children }) => {
               </ul>
             </div>
 
-            {/* INSIGHTS */}
             <div>
               <h5 className="text-white font-semibold mb-4">Insights</h5>
               <ul className="space-y-2">
@@ -250,7 +232,6 @@ const PublicLayout = ({ children }) => {
               </ul>
             </div>
 
-            {/* SEARCH */}
             <div>
               <h5 className="text-white font-semibold mb-4">
                 Search What You Want to Know
@@ -269,7 +250,6 @@ const PublicLayout = ({ children }) => {
           </div>
         </div>
 
-        {/* ================= BOTTOM BAR ================= */}
         <div className="border-t border-white/10 py-6">
           <div className="w-full px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
 
