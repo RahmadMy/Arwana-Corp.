@@ -28,6 +28,7 @@ const WorkerFishGrowth = () => {
 
   /* ===== DELETE MODAL STATE ===== */
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
   const [deleteType, setDeleteType] = useState('growth') // 'growth', 'health', 'feeding', 'harvest'
 
@@ -202,7 +203,7 @@ const WorkerFishGrowth = () => {
       fetchGrowth()
       // Optionally update detailData locally to reflect changes immediately in the header
       setDetailData({ ...detailData, ...formData })
-      alert('Information successfully updated')
+      setShowSuccessModal(true)
     } catch (err) {
       console.error(err)
     }
@@ -1022,12 +1023,16 @@ const WorkerFishGrowth = () => {
                           {/* CONDITION */}
                           <div>
                             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Condition</label>
-                            <input
-                              placeholder="e.g. Healthy, Sick, Injured"
+                            <select
                               className="w-full bg-black border border-gray-600 text-white px-4 py-2 rounded focus:border-yellow-400 focus:outline-none transition-colors"
                               value={healthForm.kondisi}
                               onChange={e => setHealthForm({ ...healthForm, kondisi: e.target.value })}
-                            />
+                            >
+                              <option value="">Select Condition</option>
+                              <option value="Healthy">Healthy</option>
+                              <option value="Sick">Sick</option>
+                              <option value="Injured">Injured</option>
+                            </select>
                           </div>
 
                           {/* ACTION */}
@@ -1283,6 +1288,35 @@ const WorkerFishGrowth = () => {
       {/* ===== DELETE MODAL (MODERNIZED) ===== */}
 
 
+      {/* ===== SUCCESS MODAL ===== */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-sm p-6 shadow-2xl relative overflow-hidden animate-fadeIn">
+            {/* Green Accent Background */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600" />
+
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-4 text-green-500">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+
+              <h2 className="text-2xl font-bold text-white mb-2">Success!</h2>
+              <p className="text-gray-400 mb-6">
+                Fish growth information has been successfully updated.
+              </p>
+
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className="w-full py-2.5 bg-green-500 hover:bg-green-600 text-black font-bold rounded-lg transition-colors shadow-lg shadow-green-900/20"
+              >
+                OK, Great!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

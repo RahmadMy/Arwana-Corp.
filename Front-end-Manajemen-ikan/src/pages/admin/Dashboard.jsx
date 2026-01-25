@@ -27,7 +27,7 @@ import {
   Cell
 } from 'recharts'
 
-const COLORS = ['#FACC15', '#22C55E', '#EF4444']
+const COLORS = ['#22C55E', '#EF4444', '#F97316']
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -53,8 +53,18 @@ const AdminDashboard = () => {
         const totalFish =
           growths.data?.reduce((sum, g) => sum + (g.jumlah || 0), 0) || 0
 
-        const healthyFish =
-          healths.data?.filter(h => h.kondisi === 'Sehat').length || 0
+        // Categorize Health
+        const healthyFish = healths.data?.filter(h =>
+          ['Sehat', 'Healthy'].includes(h.kondisi)
+        ).length || 0
+
+        const sickFish = healths.data?.filter(h =>
+          ['Sakit', 'Sick'].includes(h.kondisi)
+        ).length || 0
+
+        const injuredFish = healths.data?.filter(h =>
+          ['Cedera', 'Luka', 'Injured'].includes(h.kondisi)
+        ).length || 0
 
         // Grafik pertumbuhan
         const growthData =
@@ -66,7 +76,8 @@ const AdminDashboard = () => {
         // Grafik kesehatan
         const healthData = [
           { name: 'Healthy', value: healthyFish },
-          { name: 'Unhealthy', value: (healths.data?.length || 0) - healthyFish }
+          { name: 'Sick', value: sickFish },
+          { name: 'Injured', value: injuredFish }
         ]
 
         setStats({

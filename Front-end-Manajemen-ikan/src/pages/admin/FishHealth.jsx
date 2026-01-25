@@ -229,13 +229,17 @@ const AdminFishHealth = () => {
                 ))}
               </select>
 
-              <input
+              <select
                 name="kondisi"
                 value={formData.kondisi}
                 onChange={handleChange}
-                placeholder="Kondisi"
                 className="w-full bg-black border border-gray-600 text-white px-4 py-2 rounded"
-              />
+              >
+                <option value="">Select Condition</option>
+                <option value="Healthy">Healthy</option>
+                <option value="Sick">Sick</option>
+                <option value="Injured">Injured</option>
+              </select>
 
               <input
                 name="tindakan"
