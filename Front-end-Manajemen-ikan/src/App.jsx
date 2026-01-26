@@ -24,9 +24,6 @@ import AdminUsers from './pages/admin/Users'
 import AdminAquariums from './pages/admin/Aquariums'
 import AdminFishSpecies from './pages/admin/FishSpecies'
 import AdminFishGrowth from './pages/admin/FishGrowth'
-import AdminFishHealth from './pages/admin/FishHealth'
-import AdminHarvest from './pages/admin/Harvest'
-import AdminFeedingSchedule from './pages/admin/FeedingSchedule'
 import AdminFeed from './pages/admin/Feed'
 import AdminNews from './pages/admin/News'
 
@@ -35,9 +32,6 @@ import WorkerDashboard from './pages/worker/Dashboard'
 import WorkerAquariums from './pages/worker/Aquariums'
 import WorkerFishSpecies from './pages/worker/FishSpecies'
 import WorkerFishGrowth from './pages/worker/FishGrowth'
-import WorkerFishHealth from './pages/worker/FishHealth'
-import WorkerHarvest from './pages/worker/Harvest'
-import WorkerFeedingSchedule from './pages/worker/FeedingSchedule'
 import WorkerFeed from './pages/worker/Feed'
 
 // Other Pages
@@ -100,30 +94,6 @@ function App() {
             }
           />
           <Route
-            path="/admin/fish-health"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminLayout><AdminFishHealth /></AdminLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/harvest"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminLayout><AdminHarvest /></AdminLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/feeding-schedule"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminLayout><AdminFeedingSchedule /></AdminLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/admin/feed"
             element={
               <ProtectedRoute requiredRole="admin">
@@ -170,30 +140,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <WorkerLayout><WorkerFishGrowth /></WorkerLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/worker/fish-health"
-            element={
-              <ProtectedRoute>
-                <WorkerLayout><WorkerFishHealth /></WorkerLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/worker/harvest"
-            element={
-              <ProtectedRoute>
-                <WorkerLayout><WorkerHarvest /></WorkerLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/worker/feeding-schedule"
-            element={
-              <ProtectedRoute>
-                <WorkerLayout><WorkerFeedingSchedule /></WorkerLayout>
               </ProtectedRoute>
             }
           />
